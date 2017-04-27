@@ -40,7 +40,8 @@ public class Vision extends Subsystem implements PIDSource {
 	private CvSink sink;
 	private CvSource stream;
 	private double center;
-	public boolean twoTargets;	
+	private boolean twoTargets;
+	private int numberOfFilteredContours;
 	private int middle;
 
 	public Vision() {
@@ -104,6 +105,8 @@ public class Vision extends Subsystem implements PIDSource {
 
 		//draw our contours
 		drawContours(frame, filteredContours, -1, new Scalar(0, 0xFF, 0), FILLED);
+		//figure out how many targets there are
+		numberOfFilteredContours = filteredContours.size();
 		//figure out if we have 2 targets
 		if(rects.size() == 2) twoTargets = true;
 		else twoTargets = false;
@@ -128,6 +131,11 @@ public class Vision extends Subsystem implements PIDSource {
 	 */
 	public void putFrame() {
 		stream.putFrame(processed);
+	}
+	
+	public int getNumTargets(){
+		int temp = numberOfFilteredContours;
+		return temp;
 	}
 
 	/**
