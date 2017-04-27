@@ -1,6 +1,10 @@
 package org.usfirst.frc.team4786.robot;
 
+import org.usfirst.frc.team4786.robot.commands.CenterOnPeg;
+
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.buttons.Button;
+import edu.wpi.first.wpilibj.buttons.JoystickButton;
 
 /**
  * This class is the glue that binds the controls on the physical operator
@@ -8,10 +12,15 @@ import edu.wpi.first.wpilibj.XboxController;
  */
 public class OI {
 	public XboxController xbox;
+	Button aButton;
 	
 	public OI(){
 		xbox = new XboxController(0);
+		aButton = new JoystickButton(xbox, Buttons.A);
+		aButton.whenPressed(new CenterOnPeg());
 	}
+	
+	
 	//// CREATING BUTTONS
 	// One type of button is a joystick button which is any button on a
 	//// joystick.
