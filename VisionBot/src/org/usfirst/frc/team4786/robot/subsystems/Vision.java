@@ -111,8 +111,9 @@ public class Vision extends Subsystem implements PIDSource {
 		if(rects.size() == 2) twoTargets = true;
 		else twoTargets = false;
 		//if we have 2 targets, draw the marker where we think the peg is
-		if(twoTargets)
-			Imgproc.drawMarker(frame, midpoint(center(rects.get(0)), center(rects.get(1))), new Scalar(0xFF, 0, 0));
+		/*if(twoTargets)
+			Imgproc.drawMarker(frame, midpoint(center(rects.get(0)), center(rects.get(1))), new Scalar(0xFF, 0, 0));*/
+		Imgproc.drawMarker(frame, center(rects), new Scalar(0xFF, 0, 0));
 		
 		//draw markers to show info on each rect
 		for (int i = 0; i < rects.size(); i++) {
@@ -169,6 +170,19 @@ public class Vision extends Subsystem implements PIDSource {
 	 */
 	public static Point center(Rect r) {
 		return midpoint(r.br(), r.tl());
+	}
+	
+	public static Point center(ArrayList<Rect> rects){
+		double x = 0;
+		double y = 0;
+		for(Rect r : rects){
+			x += center(r).x;
+			y += center(r).y;
+		}
+		
+		x /= ((double) rects.size());
+		y /= ((double) rects.size());
+		return new Point(x,y);
 	}
 
 	@Override
