@@ -42,7 +42,7 @@ public class Vision extends Subsystem implements PIDSource {
 	private double center;
 	public boolean twoTargets;
 	
-	private int middle = RobotMap.width / 2;
+	private int middle;
 
 	public Vision() {
 		processed = new Mat();
@@ -52,6 +52,7 @@ public class Vision extends Subsystem implements PIDSource {
 		camera.setFPS(15);
 		sink = CameraServer.getInstance().getVideo();
 		stream = CameraServer.getInstance().putVideo("Stream", RobotMap.width, RobotMap.height);
+		middle = RobotMap.width / 2;
 	}
 
 	public void initDefaultCommand() {
@@ -73,7 +74,7 @@ public class Vision extends Subsystem implements PIDSource {
 				new Scalar(RobotMap.highBlueValue, RobotMap.highGreenValue, RobotMap.highRedValue), processed);
 
 		Mat hierarchy = new Mat();
-		List<MatOfPoint> contours = new ArrayList<>();
+		List<MatOfPoint> contours = new ArrayList<MatOfPoint>();
 
 		//find the contours in our image
 		findContours(processed, contours, hierarchy, RETR_LIST, CHAIN_APPROX_NONE);
