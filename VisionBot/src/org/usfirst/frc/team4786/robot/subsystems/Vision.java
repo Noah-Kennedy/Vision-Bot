@@ -55,16 +55,23 @@ public class Vision extends Subsystem implements PIDSource {
 		middle = RobotMap.width / 2;
 	}
 
+	//never to be called by the programmer
+	//only to be interpreted by wpilib to determine which command to run s default
 	public void initDefaultCommand() {
-		// Set the default command for a subsystem here.
-		// setDefaultCommand(new MySpecialCommand());
 		setDefaultCommand(new VisionRunnable());
 	}
 
+	/**
+	 * Grabs the frame from our cvsink
+	 */
 	public void grabFrame() {
 		sink.grabFrame(frame);
 	}
 
+	/**
+	 * Processes our current frame by applying filters, blurs and contour finding.
+	 * The processed data will be overlaid on top of the original captured frame
+	 */
 	public void process() {
 		//blurs the image to remove false positives
 		Imgproc.GaussianBlur(frame, processed, new Size(17, 17), 2);
@@ -111,6 +118,9 @@ public class Vision extends Subsystem implements PIDSource {
 		// cameraStream.putFrame(mat);
 	}
 
+	/**
+	 * Feeds the processed data to the cvsource used as an output stream.
+	 */
 	public void putFrame() {
 		stream.putFrame(processed);
 	}
