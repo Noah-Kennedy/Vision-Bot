@@ -40,8 +40,7 @@ public class Vision extends Subsystem implements PIDSource {
 	private CvSink sink;
 	private CvSource stream;
 	private double center;
-	public boolean twoTargets;
-	
+	public boolean twoTargets;	
 	private int middle;
 
 	public Vision() {
@@ -77,8 +76,9 @@ public class Vision extends Subsystem implements PIDSource {
 		Imgproc.GaussianBlur(frame, processed, new Size(17, 17), 2);
 
 		//removes everything not in our filter range
-		Core.inRange(processed, new Scalar(RobotMap.lowBlueValue, RobotMap.lowGreenValue, RobotMap.lowRedValue),
-				new Scalar(RobotMap.highBlueValue, RobotMap.highGreenValue, RobotMap.highRedValue), processed);
+		Scalar lowRange = new Scalar(RobotMap.lowBlueValue, RobotMap.lowGreenValue, RobotMap.lowRedValue);
+		Scalar highRange = new Scalar(RobotMap.highBlueValue, RobotMap.highGreenValue, RobotMap.highRedValue);
+		Core.inRange(processed, lowRange, highRange, processed);
 
 		Mat hierarchy = new Mat();
 		List<MatOfPoint> contours = new ArrayList<MatOfPoint>();
@@ -86,14 +86,15 @@ public class Vision extends Subsystem implements PIDSource {
 		//find the contours in our image
 		findContours(processed, contours, hierarchy, RETR_LIST, CHAIN_APPROX_NONE);
 
-		ArrayList<MatOfPoint> filteredContours = new ArrayList<MatOfPoint>(); // List of filtered
-														// contours
-		ArrayList<Rect> rects = new ArrayList<Rect>(); // List of filtered
-														// contours as Rect
-														// objects
+		//list of filtered contours
+		ArrayList<MatOfPoint> filteredContours = new ArrayList<MatOfPoint>();
+		
+		//list of filtered contours as rect objects
+		ArrayList<Rect> rects = new ArrayList<Rect>();
 
 		//put our contours into rectangle objects if they pass our conditions
 		for (MatOfPoint contour : contours) {
+			//bounding rect objects are rectangles whose bounderies encompass all of the contour
 			Rect boundingRect = boundingRect(contour);
 			if (boundingRect.height > boundingRect.width && boundingRect.area() > RobotMap.minimumArea) {
 				filteredContours.add(contour);
@@ -101,12 +102,16 @@ public class Vision extends Subsystem implements PIDSource {
 			}
 		}
 
-		//draw our contours and markers onto our frame
+		//draw our contours
 		drawContours(frame, filteredContours, -1, new Scalar(0, 0xFF, 0), FILLED);
+		//figure out if we have 2 targets
 		if(rects.size() == 2) twoTargets = true;
 		else twoTargets = false;
+		//if we have 2 targets, draw the marker where we think the peg is
 		if(twoTargets)
-			Imgproc.drawMarker(frame, midpoint(center(rects.get(0)), center(rects.get(1))), new Scalar(0xFF, 0, 0));		
+			Imgproc.drawMarker(frame, midpoint(center(rects.get(0)), center(rects.get(1))), new Scalar(0xFF, 0, 0));
+		
+		//draw markers to show info on each rect
 		for (int i = 0; i < rects.size(); i++) {
 			Imgproc.drawMarker(frame, center(rects.get(i)), new Scalar(0xFF, 0, 0));
 			Imgproc.drawMarker(frame, rects.get(i).br(), new Scalar(0xFF, 0, 0));
@@ -140,6 +145,10 @@ public class Vision extends Subsystem implements PIDSource {
 		return new Point(x, y);
 	}
 	
+	/**
+	 * 
+	 * @return the distance between the peg and the center of our image
+	 */
 	public double getOffset(){
 		return center - middle;
 	}
