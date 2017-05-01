@@ -40,8 +40,7 @@ public class Vision extends Subsystem implements PIDSource {
 	private CvSink sink;
 	private CvSource stream;
 	private double center;
-	private boolean twoTargets;
-	private int numberOfFilteredContours;
+	private int numTargets;
 	private int middle;
 
 	public Vision() {
@@ -58,7 +57,7 @@ public class Vision extends Subsystem implements PIDSource {
 	//never to be called by the programmer
 	//only to be interpreted by wpilib to determine which command to run s default
 	public void initDefaultCommand() {
-		//TODO figure out if better multithreaded
+		//TODO figure out if better multithreaded and comment out default command if necessary
 		setDefaultCommand(new VisionRunnable());
 	}
 
@@ -82,11 +81,12 @@ public class Vision extends Subsystem implements PIDSource {
 		Scalar highRange = new Scalar(RobotMap.highBlueValue, RobotMap.highGreenValue, RobotMap.highRedValue);
 		Core.inRange(processed, lowRange, highRange, processed);
 
-		Mat hierarchy = new Mat();
+		//Mat hierarchy = new Mat();
 		List<MatOfPoint> contours = new ArrayList<MatOfPoint>();
 
 		//find the contours in our image
-		findContours(processed, contours, hierarchy, RETR_LIST, CHAIN_APPROX_NONE);
+		findContours(processed, contours, processed, RETR_LIST, CHAIN_APPROX_NONE);
+		//findContours();
 
 		//list of filtered contours
 		ArrayList<MatOfPoint> filteredContours = new ArrayList<MatOfPoint>();
@@ -107,10 +107,7 @@ public class Vision extends Subsystem implements PIDSource {
 		//draw our contours
 		drawContours(frame, filteredContours, -1, new Scalar(0, 0xFF, 0), FILLED);
 		//figure out how many targets there are
-		numberOfFilteredContours = filteredContours.size();
-		//figure out if we have 2 targets
-		if(rects.size() == 2) twoTargets = true;
-		else twoTargets = false;
+		numTargets = filteredContours.size();
 		//if we have 2 targets, draw the marker where we think the peg is
 		/*if(twoTargets)
 			Imgproc.drawMarker(frame, midpoint(center(rects.get(0)), center(rects.get(1))), new Scalar(0xFF, 0, 0));*/
@@ -133,11 +130,11 @@ public class Vision extends Subsystem implements PIDSource {
 	 * Feeds the processed data to the cvsource used as an output stream.
 	 */
 	public void putFrame() {
-		stream.putFrame(processed);
+		stream.putFrame(frame);
 	}
 	
 	public int getNumTargets(){
-		int temp = numberOfFilteredContours;
+		int temp = numTargets;
 		return temp;
 	}
 
