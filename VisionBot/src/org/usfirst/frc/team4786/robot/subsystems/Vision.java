@@ -121,8 +121,9 @@ public class Vision extends Subsystem implements PIDSource {
 			Imgproc.drawMarker(frame, rects.get(i).br(), new Scalar(0xFF, 0, 0));
 			Imgproc.drawMarker(frame, rects.get(i).tl(), new Scalar(0xFF, 0, 0));
 		}
-		if(twoTargets)
-			center = midpoint(center(rects.get(0)), center(rects.get(1))).x;
+		/*if(twoTargets)
+			center = midpoint(center(rects.get(0)), center(rects.get(1))).x;*/
+		center = center(rects).x;
 
 		// cameraStream.putFrame(mat);
 	}
