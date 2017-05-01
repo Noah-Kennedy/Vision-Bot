@@ -58,6 +58,7 @@ public class Vision extends Subsystem implements PIDSource {
 	//never to be called by the programmer
 	//only to be interpreted by wpilib to determine which command to run s default
 	public void initDefaultCommand() {
+		//TODO figure out if better multithreaded
 		setDefaultCommand(new VisionRunnable());
 	}
 
