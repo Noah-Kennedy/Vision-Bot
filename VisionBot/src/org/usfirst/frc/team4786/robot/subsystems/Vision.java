@@ -121,6 +121,7 @@ public class Vision extends Subsystem implements PIDSource {
 		for (MatOfPoint contour : contours) {
 			//bounding rect objects are rectangles whose bounderies encompass all of the contour
 			Rect boundingRect = boundingRect(contour);
+			//check to see if we are a tallish rectangle with a largish area
 			if (boundingRect.height > boundingRect.width && boundingRect.area() > RobotMap.minimumArea)	{
 				filteredContours.add(contour);
 				rects.add(boundingRect);
