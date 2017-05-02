@@ -37,7 +37,7 @@ public class Robot extends IterativeRobot {
 
 		SmartDashboard.putData("Auto mode", chooser);
 		driveTrain = new DriveTrain();
-		vision = new Vision();
+		vision = new Vision("Stream",0);
 		
 		/*Thread visionThread = new Thread(() -> {
 			VisionRunnable runnable = new VisionRunnable();

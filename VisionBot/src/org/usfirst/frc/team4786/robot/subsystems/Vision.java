@@ -8,7 +8,6 @@ import static org.opencv.imgproc.Imgproc.drawContours;
 import static org.opencv.imgproc.Imgproc.findContours;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
@@ -34,6 +33,8 @@ import edu.wpi.first.wpilibj.command.Subsystem;
  */
 public class Vision extends Subsystem implements PIDSource {
 
+	//make all of the instance fields private
+	//it will screw up your multithreading if something other than the vision thread tries to directly access something from here
 	private Mat processed;
 	private Mat frame;
 	private UsbCamera camera;
@@ -43,14 +44,14 @@ public class Vision extends Subsystem implements PIDSource {
 	private int numTargets;
 	private int middle;
 
-	public Vision() {
+	public Vision(String streamName, int cam) {
 		processed = new Mat();
 		frame = new Mat();
-		camera = CameraServer.getInstance().startAutomaticCapture(0);
+		camera = CameraServer.getInstance().startAutomaticCapture(cam);
 		camera.setResolution(RobotMap.width, RobotMap.height);
 		camera.setFPS(15);
 		sink = CameraServer.getInstance().getVideo();
-		stream = CameraServer.getInstance().putVideo("Stream", RobotMap.width, RobotMap.height);
+		stream = CameraServer.getInstance().putVideo(streamName, RobotMap.width, RobotMap.height);
 		middle = RobotMap.width / 2;
 	}
 
@@ -79,11 +80,11 @@ public class Vision extends Subsystem implements PIDSource {
 		//we are going to use HSV, not BGR for better filtration
 		Imgproc.cvtColor(processed, processed, Imgproc.COLOR_BGR2HSV);
 		
-		//create scalars to hold high and low thresholds in BGR
+		//create scalars to hold high and low thresholds if using BGR
 		/*Scalar lowRange = new Scalar(RobotMap.lowBlueValue, RobotMap.lowGreenValue, RobotMap.lowRedValue);
 		Scalar highRange = new Scalar(RobotMap.highBlueValue, RobotMap.highGreenValue, RobotMap.highRedValue);*/
 		
-		//HSV Scalars
+		//create scalars if using HSV
 		Scalar lowRange = new Scalar(RobotMap.lowHue, RobotMap.lowSat, RobotMap.lowVal);
 		Scalar highRange = new Scalar(RobotMap.highHue, RobotMap.highSat, RobotMap.highVal);
 		
@@ -91,11 +92,10 @@ public class Vision extends Subsystem implements PIDSource {
 		Core.inRange(processed, lowRange, highRange, processed);
 
 		//Mat hierarchy = new Mat();
-		List<MatOfPoint> contours = new ArrayList<MatOfPoint>();
+		ArrayList<MatOfPoint> contours = new ArrayList<MatOfPoint>();
 
 		//find the contours in our image
 		findContours(processed, contours, processed, RETR_LIST, CHAIN_APPROX_NONE);
-		//findContours();
 
 		//list of filtered contours
 		ArrayList<MatOfPoint> filteredContours = new ArrayList<MatOfPoint>();
@@ -120,13 +120,13 @@ public class Vision extends Subsystem implements PIDSource {
 		
 		//draw marker at center of all rects
 		if(rects.size() > 0)
-			Imgproc.drawMarker(frame, center(rects), new Scalar(0xFF, 0, 0));
+			Imgproc.drawMarker(frame, center(rects), new Scalar(0xFF, 0, 0xFF));
 		
 		//draw markers to show info on each rect
-		for (int i = 0; i < rects.size(); i++) {
-			Imgproc.drawMarker(frame, center(rects.get(i)), new Scalar(0xFF, 0, 0));
-			Imgproc.drawMarker(frame, rects.get(i).br(), new Scalar(0xFF, 0, 0));
-			Imgproc.drawMarker(frame, rects.get(i).tl(), new Scalar(0xFF, 0, 0));
+		for (Rect rect : rects) {
+			Imgproc.drawMarker(frame, center(rect), new Scalar(0, 0, 0xFF));
+			Imgproc.drawMarker(frame, rect.br(), new Scalar(0xFF, 0, 0));
+			Imgproc.drawMarker(frame, rect.tl(), new Scalar(0xFF, 0, 0));
 		}
 		/*if(twoTargets)
 			center = midpoint(center(rects.get(0)), center(rects.get(1))).x;*/
