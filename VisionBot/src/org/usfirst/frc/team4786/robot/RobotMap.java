@@ -11,14 +11,26 @@ public class RobotMap {
 	public static final int frontRightPort = 0;
 	public static final int frontLeftPort = 0;
 	
-	//vision constants for image
+	//vision constants for image size
 	public static final int minimumArea = 0;
+	
+	//thresholds for pixel color
 	public static final int lowBlueValue = 250;
 	public static final int lowRedValue = 250;
 	public static final int lowGreenValue = 250;
 	public static final int highBlueValue = 255;
 	public static final int highGreenValue = 255;
 	public static final int highRedValue = 255;
+	
+	//thresholds for pixel hsv
+	public static final int lowHue = 70;
+	public static final int lowSat = 2;
+	public static final int lowVal = 0;
+	public static final int highHue = 85;
+	public static final int highSat = 3;
+	public static final int highVal = 255;
+	
+	
 	public static final int width = 320;
 	public static final int height = 240;
 	

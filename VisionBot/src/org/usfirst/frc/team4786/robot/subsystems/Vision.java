@@ -29,7 +29,7 @@ import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
-/**
+/**The vision class is used to process and handle the majority of our computer vision
  *
  */
 public class Vision extends Subsystem implements PIDSource {
@@ -76,9 +76,18 @@ public class Vision extends Subsystem implements PIDSource {
 		//blurs the image to remove false positives
 		Imgproc.GaussianBlur(frame, processed, new Size(17, 17), 2);
 
+		//we are going to use HSV, not BGR for better filtration
+		Imgproc.cvtColor(processed, processed, Imgproc.COLOR_BGR2HSV);
+		
+		//create scalars to hold high and low thresholds in BGR
+		/*Scalar lowRange = new Scalar(RobotMap.lowBlueValue, RobotMap.lowGreenValue, RobotMap.lowRedValue);
+		Scalar highRange = new Scalar(RobotMap.highBlueValue, RobotMap.highGreenValue, RobotMap.highRedValue);*/
+		
+		//HSV Scalars
+		Scalar lowRange = new Scalar(RobotMap.lowHue, RobotMap.lowSat, RobotMap.lowVal);
+		Scalar highRange = new Scalar(RobotMap.highHue, RobotMap.highSat, RobotMap.highVal);
+		
 		//removes everything not in our filter range
-		Scalar lowRange = new Scalar(RobotMap.lowBlueValue, RobotMap.lowGreenValue, RobotMap.lowRedValue);
-		Scalar highRange = new Scalar(RobotMap.highBlueValue, RobotMap.highGreenValue, RobotMap.highRedValue);
 		Core.inRange(processed, lowRange, highRange, processed);
 
 		//Mat hierarchy = new Mat();
@@ -98,7 +107,7 @@ public class Vision extends Subsystem implements PIDSource {
 		for (MatOfPoint contour : contours) {
 			//bounding rect objects are rectangles whose bounderies encompass all of the contour
 			Rect boundingRect = boundingRect(contour);
-			if (boundingRect.height > boundingRect.width && boundingRect.area() > RobotMap.minimumArea) {
+			if (boundingRect.height > boundingRect.width && boundingRect.area() > RobotMap.minimumArea)	{
 				filteredContours.add(contour);
 				rects.add(boundingRect);
 			}
@@ -108,10 +117,10 @@ public class Vision extends Subsystem implements PIDSource {
 		drawContours(frame, filteredContours, -1, new Scalar(0, 0xFF, 0), FILLED);
 		//figure out how many targets there are
 		numTargets = filteredContours.size();
-		//if we have 2 targets, draw the marker where we think the peg is
-		/*if(twoTargets)
-			Imgproc.drawMarker(frame, midpoint(center(rects.get(0)), center(rects.get(1))), new Scalar(0xFF, 0, 0));*/
-		Imgproc.drawMarker(frame, center(rects), new Scalar(0xFF, 0, 0));
+		
+		//draw marker at center of all rects
+		if(rects.size() > 0)
+			Imgproc.drawMarker(frame, center(rects), new Scalar(0xFF, 0, 0));
 		
 		//draw markers to show info on each rect
 		for (int i = 0; i < rects.size(); i++) {
