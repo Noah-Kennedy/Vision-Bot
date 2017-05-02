@@ -74,6 +74,20 @@ public class Vision extends Subsystem implements PIDSource {
 	 * The processed data will be overlaid on top of the original captured frame
 	 */
 	public void process() {
+		/*
+		 * We are going to keep the frame mat the same until the end when we add the markers and filtered contours.
+		 * We will run all of our processing algorithms on the processed mat.
+		 * The processed mat will usually serve as both a destination and source mat.
+		 * We will first apply a blur to smooth the image out and remove false positives.
+		 * Next we will convert it from BGR to HSV.
+		 * We will work in HSV because it filters better in adverse light conditions and at longer distances.
+		 * We will try and avoid having large minimum area filters because they impose substantial limits on our range
+		 * Next we will filter out all of the pixels not in our HSV range.
+		 * Next we will find the contours in our filtered image.
+		 * Next we will apply some additional filtering techniques to remove false positives.
+		 * Finally we will collect basic data on the image and draw the filtered contours and markers onto our output frame.
+		 */
+		
 		//blurs the image to remove false positives
 		Imgproc.GaussianBlur(frame, processed, new Size(17, 17), 2);
 
@@ -128,9 +142,8 @@ public class Vision extends Subsystem implements PIDSource {
 			Imgproc.drawMarker(frame, rect.br(), new Scalar(0xFF, 0, 0));
 			Imgproc.drawMarker(frame, rect.tl(), new Scalar(0xFF, 0, 0));
 		}
-		/*if(twoTargets)
-			center = midpoint(center(rects.get(0)), center(rects.get(1))).x;*/
-		center = center(rects).x;
+		if(numTargets > 0)
+			center = center(rects).x;
 
 		// cameraStream.putFrame(mat);
 	}
@@ -154,7 +167,7 @@ public class Vision extends Subsystem implements PIDSource {
 	 * @param p2
 	 * @return the midpoint of the two points
 	 */
-	public static Point midpoint(Point p1, Point p2) {
+	private static Point midpoint(Point p1, Point p2) {
 		double x = p1.x + p2.x;
 		x /= 2.0;
 		double y = p1.y + p2.y;
@@ -176,11 +189,11 @@ public class Vision extends Subsystem implements PIDSource {
 	 * @param r
 	 * @return the center of the rect
 	 */
-	public static Point center(Rect r) {
+	private static Point center(Rect r) {
 		return midpoint(r.br(), r.tl());
 	}
 	
-	public static Point center(ArrayList<Rect> rects){
+	private static Point center(ArrayList<Rect> rects){
 		double x = 0;
 		double y = 0;
 		for(Rect r : rects){
@@ -193,12 +206,16 @@ public class Vision extends Subsystem implements PIDSource {
 		return new Point(x,y);
 	}
 
-	@Override
+	/**
+	 * Currently source types other than kDisplacement are unsupported, this method does nothing
+	 */
 	public void setPIDSourceType(PIDSourceType pidSource) {
 		
 	}
 
-	@Override
+	/**
+	 * @return kDisplacement
+	 */
 	public PIDSourceType getPIDSourceType() {
 		return PIDSourceType.kDisplacement;
 	}
