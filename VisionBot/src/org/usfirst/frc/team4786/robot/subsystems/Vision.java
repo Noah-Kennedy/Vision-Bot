@@ -35,6 +35,7 @@ public class Vision extends Subsystem implements PIDSource {
 
 	//make all of the instance fields private
 	//it will screw up your multithreading if something other than the vision thread tries to directly access something from here
+	//don't allow for objects to be publicly accessed
 	private Mat processed;
 	private Mat frame;
 	private UsbCamera camera;
@@ -194,6 +195,11 @@ public class Vision extends Subsystem implements PIDSource {
 		return midpoint(r.br(), r.tl());
 	}
 	
+	/**
+	 * Averages all of the top left and bottom right corners together to find the center point
+	 * @param rects a list of rect objects
+	 * @return the point at the center of the list
+	 */
 	private static Point center(ArrayList<Rect> rects){
 		double x = 0;
 		double y = 0;
