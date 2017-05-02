@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
+import org.usfirst.frc.team4786.robot.commands.VisionRunnable;
 import org.usfirst.frc.team4786.robot.subsystems.DriveTrain;
 import org.usfirst.frc.team4786.robot.subsystems.Vision;
 
@@ -39,12 +40,12 @@ public class Robot extends IterativeRobot {
 		driveTrain = new DriveTrain();
 		vision = new Vision("Stream",0);
 		
-		/*Thread visionThread = new Thread(() -> {
+		Thread visionThread = new Thread(() -> {
 			VisionRunnable runnable = new VisionRunnable();
 			runnable.start();
 		});
 		
-		visionThread.start();*/
+		visionThread.start();
 	}
 
 	/**

@@ -60,7 +60,7 @@ public class Vision extends Subsystem implements PIDSource {
 	//only to be interpreted by wpilib to determine which command to run s default
 	public void initDefaultCommand() {
 		//TODO figure out if better multithreaded and comment out default command if necessary
-		setDefaultCommand(new VisionRunnable());
+		//setDefaultCommand(new VisionRunnable());
 	}
 
 	/**
@@ -74,7 +74,7 @@ public class Vision extends Subsystem implements PIDSource {
 	 * Processes our current frame by applying filters, blurs and contour finding.
 	 * The processed data will be overlaid on top of the original captured frame
 	 */
-	public void process() {
+	public synchronized void process() {
 		/*
 		 * We are going to keep the frame mat the same until the end when we add the markers and filtered contours.
 		 * We will run all of our processing algorithms on the processed mat.
