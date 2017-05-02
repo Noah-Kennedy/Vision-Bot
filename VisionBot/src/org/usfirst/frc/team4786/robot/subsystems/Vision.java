@@ -91,7 +91,7 @@ public class Vision extends Subsystem implements PIDSource {
 		 */
 		
 		//blurs the image to remove false positives
-		Imgproc.GaussianBlur(frame, processed, new Size(17, 17), 2);
+		Imgproc.GaussianBlur(frame, processed, new Size(17, 17), 3);
 
 		//we are going to use HSV, not BGR for better filtration
 		Imgproc.cvtColor(processed, processed, Imgproc.COLOR_BGR2HSV);
