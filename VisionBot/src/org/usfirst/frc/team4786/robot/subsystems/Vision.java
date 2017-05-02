@@ -73,6 +73,7 @@ public class Vision extends Subsystem implements PIDSource {
 	/**
 	 * Processes our current frame by applying filters, blurs and contour finding.
 	 * The processed data will be overlaid on top of the original captured frame
+	 * Synchronized means that any methods wishing to access this object while a different thread is running this method need to wait their turn
 	 */
 	public synchronized void process() {
 		/*
