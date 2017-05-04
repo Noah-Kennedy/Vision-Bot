@@ -51,6 +51,7 @@ public class Vision extends Subsystem implements PIDSource {
 		camera = CameraServer.getInstance().startAutomaticCapture(cam);
 		camera.setResolution(RobotMap.width, RobotMap.height);
 		camera.setFPS(15);
+		camera.setExposureAuto();
 		sink = CameraServer.getInstance().getVideo();
 		stream = CameraServer.getInstance().putVideo(streamName, RobotMap.width, RobotMap.height);
 		middle = RobotMap.width / 2;
@@ -60,7 +61,7 @@ public class Vision extends Subsystem implements PIDSource {
 	//only to be interpreted by wpilib to determine which command to run s default
 	public void initDefaultCommand() {
 		//TODO figure out if better multithreaded and comment out default command if necessary
-		//setDefaultCommand(new VisionRunnable());
+		setDefaultCommand(new VisionRunnable());
 	}
 
 	/**
@@ -75,7 +76,7 @@ public class Vision extends Subsystem implements PIDSource {
 	 * The processed data will be overlaid on top of the original captured frame
 	 * Synchronized means that any methods wishing to access this object while a different thread is running this method need to wait their turn
 	 */
-	public synchronized void process() {
+	public void process() {
 		/*
 		 * We are going to keep the frame mat the same until the end when we add the markers and filtered contours.
 		 * We will run all of our processing algorithms on the processed mat.
@@ -107,11 +108,11 @@ public class Vision extends Subsystem implements PIDSource {
 		//removes everything not in our filter range
 		Core.inRange(processed, lowRange, highRange, processed);
 
-		//Mat hierarchy = new Mat();
+		Mat hierarchy = new Mat();
 		ArrayList<MatOfPoint> contours = new ArrayList<MatOfPoint>();
 
 		//find the contours in our image
-		findContours(processed, contours, processed, RETR_LIST, CHAIN_APPROX_NONE);
+		findContours(processed, contours, hierarchy, RETR_LIST, CHAIN_APPROX_NONE);
 
 		//list of filtered contours
 		ArrayList<MatOfPoint> filteredContours = new ArrayList<MatOfPoint>();

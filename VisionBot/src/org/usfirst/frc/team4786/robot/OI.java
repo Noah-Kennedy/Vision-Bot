@@ -17,7 +17,7 @@ public class OI {
 	public OI(){
 		xbox = new XboxController(0);
 		aButton = new JoystickButton(xbox, Buttons.A);
-		aButton.whenPressed(new CenterOnPeg());
+		//aButton.whenPressed(new CenterOnPeg());
 	}
 	
 	

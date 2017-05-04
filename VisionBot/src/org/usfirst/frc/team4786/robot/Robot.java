@@ -24,7 +24,6 @@ public class Robot extends IterativeRobot {
 	public static OI oi;
 
 	Command autonomousCommand;
-	SendableChooser<Command> chooser = new SendableChooser<>();
 	public static DriveTrain driveTrain;
 	public static Vision vision;
 
@@ -34,18 +33,26 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void robotInit() {
+
+		vision = new Vision("Stream",0);
+		driveTrain = new DriveTrain();
+
 		oi = new OI();
 
-		SmartDashboard.putData("Auto mode", chooser);
-		driveTrain = new DriveTrain();
-		vision = new Vision("Stream",0);
-		
-		Thread visionThread = new Thread(() -> {
-			VisionRunnable runnable = new VisionRunnable();
-			runnable.start();
+		vision.grabFrame();
+		vision.process();
+		vision.putFrame();
+		/*Thread visionThread = new Thread(() -> {
+			//VisionRunnable runnable = new VisionRunnable();
+			//runnable.start();
+			while(true){
+				vision.grabFrame();
+				vision.process();
+				vision.putFrame();
+			}
 		});
 		
-		visionThread.start();
+		visionThread.start();*/
 	}
 
 	/**
@@ -76,18 +83,7 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void autonomousInit() {
-		autonomousCommand = chooser.getSelected();
-
-		/*
-		 * String autoSelected = SmartDashboard.getString("Auto Selector",
-		 * "Default"); switch(autoSelected) { case "My Auto": autonomousCommand
-		 * = new MyAutoCommand(); break; case "Default Auto": default:
-		 * autonomousCommand = new ExampleCommand(); break; }
-		 */
-
-		// schedule the autonomous command (example)
-		if (autonomousCommand != null)
-			autonomousCommand.start();
+		
 	}
 
 	/**

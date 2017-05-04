@@ -8,8 +8,8 @@ package org.usfirst.frc.team4786.robot;
  */
 public class RobotMap {
 
-	public static final int frontRightPort = 0;
-	public static final int frontLeftPort = 0;
+	public static final int frontRightPort = 14;
+	public static final int frontLeftPort = 13;
 	
 	//vision constants for image size
 	public static final int minimumArea = 0;
@@ -24,10 +24,10 @@ public class RobotMap {
 	
 	//thresholds for pixel hsv
 	public static final int lowHue = 70;
-	public static final int lowSat = 2;
+	public static final int lowSat = 0;
 	public static final int lowVal = 0;
 	public static final int highHue = 85;
-	public static final int highSat = 3;
+	public static final int highSat = 255;
 	public static final int highVal = 255;
 	
 	
