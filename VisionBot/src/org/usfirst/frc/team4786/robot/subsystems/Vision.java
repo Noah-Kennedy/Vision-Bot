@@ -108,7 +108,11 @@ public class Vision extends Subsystem implements PIDSource {
 		//removes everything not in our filter range
 		Core.inRange(processed, lowRange, highRange, processed);
 
+		//mat used to for some of the contour finding
+		//TODO determine if necessary
 		Mat hierarchy = new Mat();
+		
+		//create an arraylist to hold the unfiltered contours
 		ArrayList<MatOfPoint> contours = new ArrayList<MatOfPoint>();
 
 		//find the contours in our image

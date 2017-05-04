@@ -8,13 +8,14 @@ package org.usfirst.frc.team4786.robot;
  */
 public class RobotMap {
 
+	//drive train ports
 	public static final int frontRightPort = 14;
 	public static final int frontLeftPort = 13;
 	
 	//vision constants for image size
 	public static final int minimumArea = 0;
 	
-	//thresholds for pixel color
+	//thresholds for pixel RGB
 	public static final int lowBlueValue = 250;
 	public static final int lowRedValue = 250;
 	public static final int lowGreenValue = 250;
@@ -22,7 +23,7 @@ public class RobotMap {
 	public static final int highGreenValue = 255;
 	public static final int highRedValue = 255;
 	
-	//thresholds for pixel hsv
+	//thresholds for pixel HSV
 	public static final int lowHue = 70;
 	public static final int lowSat = 0;
 	public static final int lowVal = 0;
@@ -30,7 +31,7 @@ public class RobotMap {
 	public static final int highSat = 255;
 	public static final int highVal = 255;
 	
-	
+	//camera stream size
 	public static final int width = 320;
 	public static final int height = 240;
 	
