@@ -153,7 +153,6 @@ public class Vision extends Subsystem implements PIDSource {
 		if(numTargets > 0)
 			center = center(rects).x;
 
-		// cameraStream.putFrame(mat);
 	}
 
 	/**
