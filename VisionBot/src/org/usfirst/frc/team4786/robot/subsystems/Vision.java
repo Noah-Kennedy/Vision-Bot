@@ -96,7 +96,8 @@ public class Vision extends Subsystem implements PIDSource {
 		Imgproc.GaussianBlur(frame, processed, new Size(17, 17), 3);
 
 		//we are going to use HSV, not BGR for better filtration
-		//change channel depths
+		//change channel depth
+		System.out.println("Channels = " + processed.channels());
 		processed.convertTo(processed, CvType.CV_8UC3);
 		//convert BGR to HSV
 		Imgproc.cvtColor(processed, processed, Imgproc.COLOR_BGR2HSV);
