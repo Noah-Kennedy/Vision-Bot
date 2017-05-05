@@ -10,6 +10,7 @@ import static org.opencv.imgproc.Imgproc.findContours;
 import java.util.ArrayList;
 
 import org.opencv.core.Core;
+import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfPoint;
 import org.opencv.core.Point;
@@ -95,6 +96,9 @@ public class Vision extends Subsystem implements PIDSource {
 		Imgproc.GaussianBlur(frame, processed, new Size(17, 17), 3);
 
 		//we are going to use HSV, not BGR for better filtration
+		//change channel depths
+		processed.convertTo(processed, CvType.CV_8UC3);
+		//convert BGR to HSV
 		Imgproc.cvtColor(processed, processed, Imgproc.COLOR_BGR2HSV);
 		
 		//create scalars to hold high and low thresholds if using BGR
