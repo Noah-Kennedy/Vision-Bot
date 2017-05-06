@@ -10,6 +10,8 @@ import static org.opencv.imgproc.Imgproc.findContours;
 import java.util.ArrayList;
 
 import org.opencv.core.Core;
+import org.opencv.imgcodecs.Imgcodecs;
+import org.opencv.videoio.VideoCapture;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfPoint;
@@ -19,8 +21,6 @@ import org.opencv.core.Scalar;
 import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
 import org.usfirst.frc.team4786.robot.RobotMap;
-import org.usfirst.frc.team4786.robot.commands.VisionRunnable;
-
 import edu.wpi.cscore.CvSink;
 import edu.wpi.cscore.CvSource;
 import edu.wpi.cscore.UsbCamera;
@@ -42,9 +42,11 @@ public class Vision extends Subsystem implements PIDSource {
 	private UsbCamera camera;
 	private CvSink sink;
 	private CvSource stream;
-	private double center;
+	private double centerX;
+	private int middleY;
+	private Point middlePoint;
 	private int numTargets;
-	private int middle;
+	private int middleX;
 
 	public Vision(String streamName, int cam) {
 		processed = new Mat();
@@ -52,10 +54,12 @@ public class Vision extends Subsystem implements PIDSource {
 		camera = CameraServer.getInstance().startAutomaticCapture(cam);
 		camera.setResolution(RobotMap.width, RobotMap.height);
 		camera.setFPS(15);
-		camera.setExposureAuto();
+		camera.setExposureManual(1);
 		sink = CameraServer.getInstance().getVideo();
 		stream = CameraServer.getInstance().putVideo(streamName, RobotMap.width, RobotMap.height);
-		middle = RobotMap.width / 2;
+		middleX = RobotMap.width / 2;
+		middleY = RobotMap.height / 2;
+		middlePoint = new Point(middleX,middleY);
 	}
 
 	//never to be called by the programmer
@@ -156,9 +160,17 @@ public class Vision extends Subsystem implements PIDSource {
 			Imgproc.drawMarker(frame, rect.tl(), new Scalar(0xFF, 0, 0));
 		}
 		if(numTargets > 0)
-			center = center(rects).x;
-
+			centerX = center(rects).x;
+		
+		
 	}
+	
+	public void printHSV(){
+		double[] d = frame.get(middleX, middleY);
+		System.out.println("H: " + d[0] + " S: " + d[1] + " V: " + d[2]);
+		Imgproc.drawMarker(frame, middlePoint, new Scalar(0xFF,0,0xFF));
+	}
+	
 
 	/**
 	 * Feeds the processed data to the cvsource used as an output stream.
@@ -168,8 +180,7 @@ public class Vision extends Subsystem implements PIDSource {
 	}
 	
 	public int getNumTargets(){
-		int temp = numTargets;
-		return temp;
+		return numTargets;
 	}
 
 	/**
@@ -192,7 +203,7 @@ public class Vision extends Subsystem implements PIDSource {
 	 * @return the distance between the peg and the center of our image
 	 */
 	public double getOffset(){
-		return center - middle;
+		return centerX - middleX;
 	}
 
 	/**
