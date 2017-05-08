@@ -63,8 +63,7 @@ public class Vision extends Subsystem implements PIDSource {
 	//never to be called by the programmer
 	//only to be interpreted by wpilib to determine which command to run s default
 	public void initDefaultCommand() {
-		//TODO figure out if better multithreaded and comment out default command if necessary
-		//setDefaultCommand(new VisionRunnable());
+
 	}
 
 	/**
@@ -98,9 +97,6 @@ public class Vision extends Subsystem implements PIDSource {
 		Imgproc.GaussianBlur(frame, processed, new Size(17, 17), 3);
 
 		//we are going to use HSV, not BGR for better filtration
-		//change channel depth
-		//System.out.println("Channels = " + processed.channels());
-		//processed.convertTo(processed, CvType.CV_8UC3);
 		//convert BGR to HSV
 		if(processed.empty()) return;
 		Imgproc.cvtColor(processed, processed, Imgproc.COLOR_BGR2HSV,0);
@@ -115,10 +111,6 @@ public class Vision extends Subsystem implements PIDSource {
 		
 		//removes everything not in our filter range
 		Core.inRange(processed, lowRange, highRange, processed);
-
-		//mat used to for some of the contour finding
-		//TODO determine if necessary
-		//Mat hierarchy = new Mat();
 		
 		//create an arraylist to hold the unfiltered contours
 		ArrayList<MatOfPoint> contours = new ArrayList<MatOfPoint>();
@@ -137,7 +129,7 @@ public class Vision extends Subsystem implements PIDSource {
 			//bounding rect objects are rectangles whose bounderies encompass all of the contour
 			Rect boundingRect = boundingRect(contour);
 			//check to see if we are a tallish rectangle with a largish area
-			if (boundingRect.height > boundingRect.width && boundingRect.area() > RobotMap.minimumArea)	{
+			if (boundingRect.height > boundingRect.width)	{
 				filteredContours.add(contour);
 				rects.add(boundingRect);
 			}
