@@ -24,12 +24,12 @@ public class RobotMap {
 	public static final int highRedValue = 255;
 	
 	//thresholds for pixel HSV
-	public static final int lowHue = 70;
-	public static final int lowSat = 0;
+	public static final int lowHue = 55;
+	public static final int lowSat = 225;
 	public static final int lowVal = 0;
-	public static final int highHue = 85;
+	public static final int highHue = 65;
 	public static final int highSat = 255;
-	public static final int highVal = 255;
+	public static final int highVal = 200;
 	
 	//camera stream size
 	public static final int width = 320;

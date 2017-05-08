@@ -25,6 +25,7 @@ import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**The vision class is used to process and handle the majority of our computer vision
  *
@@ -98,7 +99,7 @@ public class Vision extends Subsystem implements PIDSource {
 
 		//we are going to use HSV, not BGR for better filtration
 		//change channel depth
-		System.out.println("Channels = " + processed.channels());
+		//System.out.println("Channels = " + processed.channels());
 		//processed.convertTo(processed, CvType.CV_8UC3);
 		//convert BGR to HSV
 		if(processed.empty()) return;
@@ -117,13 +118,13 @@ public class Vision extends Subsystem implements PIDSource {
 
 		//mat used to for some of the contour finding
 		//TODO determine if necessary
-		Mat hierarchy = new Mat();
+		//Mat hierarchy = new Mat();
 		
 		//create an arraylist to hold the unfiltered contours
 		ArrayList<MatOfPoint> contours = new ArrayList<MatOfPoint>();
 
 		//find the contours in our image
-		findContours(processed, contours, hierarchy, RETR_LIST, CHAIN_APPROX_NONE);
+		findContours(processed, contours, processed, RETR_LIST, CHAIN_APPROX_NONE);
 
 		//list of filtered contours
 		ArrayList<MatOfPoint> filteredContours = new ArrayList<MatOfPoint>();
@@ -165,8 +166,10 @@ public class Vision extends Subsystem implements PIDSource {
 	public void printHSV(){
 		if(frame.empty()) return;
 		double[] d = frame.get(middleX, middleY);
-		System.out.println("H: " + d[0] + " S: " + d[1] + " V: " + d[2]);
-		Imgproc.drawMarker(frame, middlePoint, new Scalar(0xFF,0,0xFF));
+		SmartDashboard.putNumber("Hue", d[0]);
+		SmartDashboard.putNumber("Hue", d[1]);
+		SmartDashboard.putNumber("Hue", d[2]);
+		Imgproc.drawMarker(frame, middlePoint, new Scalar(0xFF,0xFF,0xFF));
 	}
 	
 

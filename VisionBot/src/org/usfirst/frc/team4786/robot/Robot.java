@@ -18,8 +18,6 @@ import org.usfirst.frc.team4786.robot.subsystems.Vision;
 public class Robot extends IterativeRobot {
 
 	public static OI oi;
-
-	Command autonomousCommand;
 	public static DriveTrain driveTrain;
 	public static Vision vision;
 
@@ -35,10 +33,10 @@ public class Robot extends IterativeRobot {
 
 		oi = new OI();
 
-		vision.grabFrame();
+		/*vision.grabFrame();
 		vision.process();
-		vision.printHSV();
-		vision.putFrame();
+		//vision.printHSV();
+		vision.putFrame();*/
 		Thread visionThread = new Thread(() -> {
 			//VisionRunnable runnable = new VisionRunnable();
 			//runnable.start();
@@ -94,12 +92,7 @@ public class Robot extends IterativeRobot {
 
 	@Override
 	public void teleopInit() {
-		// This makes sure that the autonomous stops running when
-		// teleop starts running. If you want the autonomous to
-		// continue until interrupted by another command, remove
-		// this line or comment it out.
-		if (autonomousCommand != null)
-			autonomousCommand.cancel();
+		
 	}
 
 	/**
