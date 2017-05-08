@@ -104,7 +104,7 @@ public class Vision extends Subsystem implements PIDSource {
 		//we are going to use HSV, not BGR for better filtration
 		//change channel depth
 		System.out.println("Channels = " + processed.channels());
-		processed.convertTo(processed, CvType.CV_8UC3);
+		//processed.convertTo(processed, CvType.CV_8UC3);
 		//convert BGR to HSV
 		if(processed.empty()) return;
 		Imgproc.cvtColor(processed, processed, Imgproc.COLOR_BGR2HSV,0);
