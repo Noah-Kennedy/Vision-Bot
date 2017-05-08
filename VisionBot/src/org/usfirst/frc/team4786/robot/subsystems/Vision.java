@@ -21,6 +21,8 @@ import org.opencv.core.Scalar;
 import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
 import org.usfirst.frc.team4786.robot.RobotMap;
+import org.usfirst.frc.team4786.robot.commands.VisionRunnable;
+
 import edu.wpi.cscore.CvSink;
 import edu.wpi.cscore.CvSource;
 import edu.wpi.cscore.UsbCamera;
@@ -66,7 +68,7 @@ public class Vision extends Subsystem implements PIDSource {
 	//only to be interpreted by wpilib to determine which command to run s default
 	public void initDefaultCommand() {
 		//TODO figure out if better multithreaded and comment out default command if necessary
-		//setDefaultCommand(new VisionRunnable());
+		setDefaultCommand(new VisionRunnable());
 	}
 
 	/**
@@ -104,7 +106,8 @@ public class Vision extends Subsystem implements PIDSource {
 		System.out.println("Channels = " + processed.channels());
 		processed.convertTo(processed, CvType.CV_8UC3);
 		//convert BGR to HSV
-		Imgproc.cvtColor(processed, processed, Imgproc.COLOR_BGR2HSV);
+		if(processed.empty()) return;
+		Imgproc.cvtColor(processed, processed, Imgproc.COLOR_BGR2HSV,0);
 		
 		//create scalars to hold high and low thresholds if using BGR
 		/*Scalar lowRange = new Scalar(RobotMap.lowBlueValue, RobotMap.lowGreenValue, RobotMap.lowRedValue);
@@ -162,10 +165,10 @@ public class Vision extends Subsystem implements PIDSource {
 		if(numTargets > 0)
 			centerX = center(rects).x;
 		
-		
 	}
 	
 	public void printHSV(){
+		if(frame.empty()) return;
 		double[] d = frame.get(middleX, middleY);
 		System.out.println("H: " + d[0] + " S: " + d[1] + " V: " + d[2]);
 		Imgproc.drawMarker(frame, middlePoint, new Scalar(0xFF,0,0xFF));

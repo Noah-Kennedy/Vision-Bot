@@ -42,7 +42,7 @@ public class Robot extends IterativeRobot {
 		/*Thread visionThread = new Thread(() -> {
 			//VisionRunnable runnable = new VisionRunnable();
 			//runnable.start();
-			while(!Thread.interrupted()){
+			while(true){
 				vision.grabFrame();
 				vision.process();
 				vision.printHSV();
