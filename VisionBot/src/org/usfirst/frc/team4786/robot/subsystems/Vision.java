@@ -10,9 +10,6 @@ import static org.opencv.imgproc.Imgproc.findContours;
 import java.util.ArrayList;
 
 import org.opencv.core.Core;
-import org.opencv.imgcodecs.Imgcodecs;
-import org.opencv.videoio.VideoCapture;
-import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfPoint;
 import org.opencv.core.Point;
@@ -21,8 +18,6 @@ import org.opencv.core.Scalar;
 import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
 import org.usfirst.frc.team4786.robot.RobotMap;
-import org.usfirst.frc.team4786.robot.commands.VisionRunnable;
-
 import edu.wpi.cscore.CvSink;
 import edu.wpi.cscore.CvSource;
 import edu.wpi.cscore.UsbCamera;
@@ -68,7 +63,7 @@ public class Vision extends Subsystem implements PIDSource {
 	//only to be interpreted by wpilib to determine which command to run s default
 	public void initDefaultCommand() {
 		//TODO figure out if better multithreaded and comment out default command if necessary
-		setDefaultCommand(new VisionRunnable());
+		//setDefaultCommand(new VisionRunnable());
 	}
 
 	/**

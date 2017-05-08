@@ -1,7 +1,5 @@
 package org.usfirst.frc.team4786.robot;
 
-import org.usfirst.frc.team4786.robot.commands.CenterOnPeg;
-
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.buttons.Button;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
