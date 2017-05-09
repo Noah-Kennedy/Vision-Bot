@@ -100,6 +100,7 @@ public class Vision extends Subsystem implements PIDSource {
 		
 		//stops the madness if the frame is empty
 		if(frame.empty()) return;
+		
 		//blurs the image to remove false positives
 		Imgproc.GaussianBlur(frame, processed, new Size(17, 17), 3);
 
