@@ -102,10 +102,12 @@ public class Vision extends Subsystem implements PIDSource {
 		Imgproc.cvtColor(processed, processed, Imgproc.COLOR_BGR2HSV,0);
 		
 		//create scalars to hold high and low thresholds if using BGR
+		//shouldn't be using these values because HSV is better
 		/*Scalar lowRange = new Scalar(RobotMap.lowBlueValue, RobotMap.lowGreenValue, RobotMap.lowRedValue);
 		Scalar highRange = new Scalar(RobotMap.highBlueValue, RobotMap.highGreenValue, RobotMap.highRedValue);*/
 		
 		//create scalars if using HSV
+		//should be using these because HSV is best
 		Scalar lowRange = new Scalar(RobotMap.lowHue, RobotMap.lowSat, RobotMap.lowVal);
 		Scalar highRange = new Scalar(RobotMap.highHue, RobotMap.highSat, RobotMap.highVal);
 		
