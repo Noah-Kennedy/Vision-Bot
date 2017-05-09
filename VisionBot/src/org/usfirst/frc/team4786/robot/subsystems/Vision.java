@@ -48,8 +48,8 @@ public class Vision extends Subsystem implements PIDSource {
 
 	/**
 	 * The constructor for the Vision subsystem
-	 * @param streamName -The name of the stream on the dashboard
-	 * @param cam - The device port of the camera
+	 * @param streamName is the name of the stream on the dashboard
+	 * @param cam is the device port of the camera
 	 */
 	public Vision(String streamName, int cam) {
 		processed = new Mat();
