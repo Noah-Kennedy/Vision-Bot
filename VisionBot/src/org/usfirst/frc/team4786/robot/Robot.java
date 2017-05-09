@@ -31,16 +31,22 @@ public class Robot extends IterativeRobot {
 		driveTrain = new DriveTrain();
 
 		oi = new OI();
+		
+		//thread for vision
 		Thread visionThread = new Thread(() -> {
+			//while the thread is not being so rudely interrupted
 			while(!Thread.interrupted()){
 				vision.grabFrame();
 				vision.process();
-				//vision.printHSV();
 				vision.putFrame();
 			}
+			
 		});
 		
+		//start thread
 		visionThread.start();
+		
+		
 	}
 
 	/**
