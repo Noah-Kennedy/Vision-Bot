@@ -2,7 +2,6 @@
 package org.usfirst.frc.team4786.robot;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
-import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import org.usfirst.frc.team4786.robot.subsystems.DriveTrain;
@@ -36,7 +35,7 @@ public class Robot extends IterativeRobot {
 			while(!Thread.interrupted()){
 				vision.grabFrame();
 				vision.process();
-				vision.printHSV();
+				//vision.printHSV();
 				vision.putFrame();
 			}
 		});

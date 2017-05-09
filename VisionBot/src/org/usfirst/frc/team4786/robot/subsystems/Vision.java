@@ -46,6 +46,11 @@ public class Vision extends Subsystem implements PIDSource {
 	private int numTargets;
 	private int middleX;
 
+	/**
+	 * The constructor for the Vision subsystem
+	 * @param streamName -The name of the stream on the dashboard
+	 * @param cam - The device port of the camera
+	 */
 	public Vision(String streamName, int cam) {
 		processed = new Mat();
 		frame = new Mat();
@@ -157,6 +162,10 @@ public class Vision extends Subsystem implements PIDSource {
 		
 	}
 	
+	/**
+	 * print the HSV values of the center pixel to the smart dashboard.
+	 * Currently gives incorrect values.
+	 */
 	public void printHSV(){
 		if(frame.empty()) return;
 		double[] d = frame.get(middleX, middleY);
@@ -174,6 +183,10 @@ public class Vision extends Subsystem implements PIDSource {
 		stream.putFrame(frame);
 	}
 	
+	/**
+	 * Returns the number of targets found onscreen
+	 * @return the number of targets on the screen
+	 */
 	public int getNumTargets(){
 		return numTargets;
 	}
