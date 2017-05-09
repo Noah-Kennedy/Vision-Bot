@@ -256,6 +256,9 @@ public class Vision extends Subsystem implements PIDSource {
 		return PIDSourceType.kDisplacement;
 	}
 
+	/**
+	 * Returns value used by PID
+	 */
 	@Override
 	public double pidGet() {
 		return getOffset();
