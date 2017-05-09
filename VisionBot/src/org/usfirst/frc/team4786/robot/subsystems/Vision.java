@@ -98,12 +98,15 @@ public class Vision extends Subsystem implements PIDSource {
 		 * Finally we will collect basic data on the image and draw the filtered contours and markers onto our output frame.
 		 */
 		
+		//stops the madness if the frame is empty
+		if(frame.empty()) return;
 		//blurs the image to remove false positives
 		Imgproc.GaussianBlur(frame, processed, new Size(17, 17), 3);
 
+		//stop this madness if the processed frame is empty
+		if(processed.empty()) return;
 		//we are going to use HSV, not BGR for better filtration
 		//convert BGR to HSV
-		if(processed.empty()) return;
 		Imgproc.cvtColor(processed, processed, Imgproc.COLOR_BGR2HSV,0);
 		
 		//create scalars to hold high and low thresholds if using BGR
