@@ -159,7 +159,9 @@ public class Vision extends Subsystem {
 			//bounding rect objects are rectangles whose bounderies encompass all of the contour
 			Rect boundingRect = boundingRect(contour);
 			//check to see if we are a tallish rectangle with a largish area
-			if (boundingRect.height > boundingRect.width)	{
+			if (boundingRect.height > boundingRect.width &&
+					Imgproc.contourArea(contour) / boundingRect.area() > RobotMap.contourToRectPercentage)	{
+				
 				filteredContours.add(contour);
 				rects.add(boundingRect);
 			}

@@ -14,7 +14,7 @@ public class RobotMap {
 	
 	//vision constants for image size
 	public static final int minimumArea = 0;
-	public static final double contourToRectPercentage = 0;
+	public static final double contourToRectPercentage = .5;
 	
 	//camera settings
 	public static final int cameraFPS = 15;
