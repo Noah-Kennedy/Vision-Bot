@@ -33,7 +33,9 @@ public class Robot extends IterativeRobot {
 		oi = new OI();
 		
 		//thread for vision
-		Thread visionThread = new Thread(() -> {
+		//always do this in lambdas, it's just easier that way, so don't pay attention to the -> or the weird parameters
+		//just know that whatever is between the {} will run in the thread
+		Thread visionThread = new Thread( () -> {
 			//while the thread is not being so rudely interrupted
 			while(!Thread.interrupted()){
 				vision.grabFrame();
@@ -48,7 +50,7 @@ public class Robot extends IterativeRobot {
 		
 		
 	}
-
+	
 	/**
 	 * This function is called once each time the robot enters Disabled mode.
 	 * You can use it to reset any subsystem information you want to clear when
