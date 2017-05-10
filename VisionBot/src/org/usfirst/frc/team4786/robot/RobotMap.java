@@ -45,4 +45,42 @@ public class RobotMap {
 	public static final double visI = 0;
 	public static final double visD = 0;
 	public static final double allowableError = 10;
+	
+	public static final double MESHBOT_ROBOT_LENGTH = 2.34375; //In feet
+	
+	//General PID Constants
+	public static final int ERROR_CONSTANT_LEFT = 100; //In native units
+	public static final int ERROR_CONSTANT_RIGHT = 100;
+	public static final int ALLOWABLE_TURN_ERROR = 1; //In degrees
+	public static final int DRIVETRAIN_ENCODER_CODES_PER_REV_LEFT = 1024;
+	public static final int DRIVETRAIN_ENCODER_CODES_PER_REV_RIGHT = 1024;
+	/*public static final int DRIVETRAIN_ENCODER_CODES_PER_REV_LEFT = 360;
+	public static final int DRIVETRAIN_ENCODER_CODES_PER_REV_RIGHT = 360;*/
+	public static final double CLOSED_LOOP_RAMP_RATE = 0.015625;
+	public static final int IZONE = 0;
+	public static final int DRIVEBASE_PROFILE = 0;
+	public static final double MAXIMUM_SPEED_VELOCITY_PID = 0.6;
+	public static final double fudgeFactor = 1;
+	public static final double turnFudgeFactor = 0.75;
+	//Wheel Radius measured in feet
+	public static final double WHEEL_RADIUS = 0.25;
+	//Distance between wheels measured in feet
+	public static final double WHEEL_SEPARATION = 2;
+
+	//public static final double LeftP = 0.1;
+	public static final double LeftP = 0.0001;
+	public static final double LeftI = 0.000010;
+	public static final double LeftD = 0.0;
+	public static final double LeftF = 0.0;
+	//Right GearBox PID Constants
+	//public static final double RightP = 0.1;
+	public static final double RightP = 0.0001;
+	public static final double RightI = 0.000010;
+	public static final double RightD = 0.0;
+	public static final double RightF = 0.0;
+	
+	public static final double TurnP = 0.02;
+	public static final double TurnI = 0.0;
+	public static final double TurnD = 0.0;
+	public static final double TurnF = 0.0;
 }

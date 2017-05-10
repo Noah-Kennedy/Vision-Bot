@@ -81,6 +81,7 @@ public class Vision extends Subsystem implements PIDSource {
 		middleX = RobotMap.width / 2;
 		middleY = RobotMap.height / 2;
 		middlePoint = new Point(middleX,middleY);
+		
 	}
 
 	//never to be called by the programmer

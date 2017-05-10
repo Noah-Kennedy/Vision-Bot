@@ -7,31 +7,34 @@ import edu.wpi.first.wpilibj.command.Command;
 /**
  *
  */
-public class CenterOnPeg extends Command {
-    public CenterOnPeg() {
-        // Use requires() here to declare subsystem dependencies
-        // eg. requires(chassis);
-    	requires(Robot.driveTrain);
+public class TurnToAngle extends Command {
+
+	double targetAngle;
+	
+    public TurnToAngle(double angle) {
+        requires(Robot.driveTrain);
+        
+        targetAngle = angle;
     }
 
     // Called just before this Command runs the first time
     protected void initialize() {
-    	Robot.driveTrain.centerOnPegInit();
+    	Robot.driveTrain.turnToAngleInit(targetAngle);
     }
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	Robot.driveTrain.centerOnPegExecute();
+    	Robot.driveTrain.turnToAngleExecute();
     }
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-        return Robot.vision.getNumTargets() != 2;
+        return Robot.driveTrain.turnToAngleIsFinished();
     }
 
     // Called once after isFinished returns true
     protected void end() {
-    	Robot.driveTrain.centerOnPegEnd();
+    	Robot.driveTrain.turnToAngleEnd();
     }
 
     // Called when another command which requires one or more of the same
