@@ -124,7 +124,9 @@ public class Vision extends Subsystem {
 		Imgproc.GaussianBlur(frame, processed, new Size(17, 17), 3);
 
 		//stop this madness if the processed frame is empty
-		if(processed.empty()) return;
+		//TODO figure out if this is necessary
+		//if(processed.empty()) return;
+		
 		//we are going to use HSV, not BGR for better filtration
 		//convert BGR to HSV
 		Imgproc.cvtColor(processed, processed, Imgproc.COLOR_BGR2HSV,0);
