@@ -16,6 +16,14 @@ public class RobotMap {
 	public static final int minimumArea = 0;
 	public static final double contourToRectPercentage = 0;
 	
+	//camera settings
+	public static final int cameraFPS = 15;
+	public static final int cameraExposure = 1;
+	
+	//camera stream size
+	public static final int width = 320;
+	public static final int height = 240;
+	
 	//thresholds for pixel RGB
 	public static final int lowBlueValue = 250;
 	public static final int lowRedValue = 250;
@@ -31,10 +39,6 @@ public class RobotMap {
 	public static final int highHue = 65;
 	public static final int highSat = 255;
 	public static final int highVal = 255;
-	
-	//camera stream size
-	public static final int width = 320;
-	public static final int height = 240;
 	
 	//vision PID
 	public static final double visionP = .05;

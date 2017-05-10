@@ -52,14 +52,32 @@ public class Vision extends Subsystem implements PIDSource {
 	 * @param cam is the device port of the camera
 	 */
 	public Vision(String streamName, int cam) {
+		
+		//instantiate mats, one to keep as the original image to have markers and contours drawn onto it
+		//and another for processing
 		processed = new Mat();
 		frame = new Mat();
+		
+		//instantiate usb camera to parameterized port
 		camera = CameraServer.getInstance().startAutomaticCapture(cam);
+		
+		//set camera resolution and FPS (frames per second)
 		camera.setResolution(RobotMap.width, RobotMap.height);
-		camera.setFPS(15);
-		camera.setExposureManual(1);
+		camera.setFPS(RobotMap.cameraFPS);
+		
+		//set exposure
+		//make this number as big as you can get it while still being able to see stuff
+		//if this camera will never be used by drivers for driving, then this should be as high as can be while
+		//the rectangles are still visible
+		camera.setExposureManual(RobotMap.cameraExposure);
+		
+		//instantiate the CvSink, which is where the freshly captured camera stream will be placed
 		sink = CameraServer.getInstance().getVideo();
+		
+		//instantiate the CvSource, which is where we will put the processed images for the drivers to see
 		stream = CameraServer.getInstance().putVideo(streamName, RobotMap.width, RobotMap.height);
+		
+		//set up some important constants, like the center pixel of the image
 		middleX = RobotMap.width / 2;
 		middleY = RobotMap.height / 2;
 		middlePoint = new Point(middleX,middleY);
