@@ -2,8 +2,11 @@
 package org.usfirst.frc.team4786.robot;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
+import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
+
+import org.usfirst.frc.team4786.robot.commands.TurnToAngle;
 import org.usfirst.frc.team4786.robot.subsystems.DriveTrain;
 import org.usfirst.frc.team4786.robot.subsystems.Vision;
 
@@ -19,6 +22,7 @@ public class Robot extends IterativeRobot {
 	public static OI oi;
 	public static DriveTrain driveTrain;
 	public static Vision vision;
+	private Command auto;
 
 	/**
 	 * This function is run when the robot is first started up and should be
@@ -79,7 +83,8 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void autonomousInit() {
-		
+		auto = new TurnToAngle(90);
+		auto.start();
 	}
 
 	/**
@@ -92,6 +97,7 @@ public class Robot extends IterativeRobot {
 
 	@Override
 	public void teleopInit() {
+		if(auto != null) auto.cancel();
 		
 	}
 
