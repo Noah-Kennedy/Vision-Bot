@@ -117,7 +117,7 @@ public class Vision extends Subsystem {
 		 * Finally we will collect basic data on the image and draw the filtered contours and markers onto our output frame.
 		 */
 		
-		//stops the madness if the frame is empty
+		//stop this madness if the frame is empty
 		if(frame.empty()) return;
 		
 		//blurs the image to remove false positives
