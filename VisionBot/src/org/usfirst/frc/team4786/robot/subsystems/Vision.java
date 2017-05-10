@@ -22,8 +22,6 @@ import edu.wpi.cscore.CvSink;
 import edu.wpi.cscore.CvSource;
 import edu.wpi.cscore.UsbCamera;
 import edu.wpi.first.wpilibj.CameraServer;
-import edu.wpi.first.wpilibj.PIDSource;
-import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -103,6 +101,7 @@ public class Vision extends Subsystem {
 	 * Synchronized means that any methods wishing to access this object while a different thread is running this method need to wait their turn
 	 */
 	public void process() {
+		
 		/*
 		 * We are going to keep the frame mat the same until the end when we add the markers and filtered contours.
 		 * We will run all of our processing algorithms on the processed mat.
