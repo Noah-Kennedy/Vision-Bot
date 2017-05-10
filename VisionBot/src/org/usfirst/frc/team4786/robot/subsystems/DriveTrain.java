@@ -140,8 +140,6 @@ public class DriveTrain extends Subsystem implements PIDOutput {
 		// otherwise, you have a spinning robot on your hands
 		frontLeft.set(-rot);
 		frontRight.set(rot);
-
-		SmartDashboard.putNumber("Rotations Calculated", rot);
 	}
 
 	public boolean driveToPositionIsFinished() {
@@ -182,9 +180,6 @@ public class DriveTrain extends Subsystem implements PIDOutput {
 		// Set the CANTalons to the speed calculated by PIDController
 		frontLeft.set(-turnToAngleRate);
 		frontRight.set(turnToAngleRate);
-
-		SmartDashboard.putNumber("NavX Angle", navX.getAngle());
-		SmartDashboard.putNumber("NavX Turn Rate", navX.getRate());
 	}
 
 	// Another weird variable check for if turning should stop

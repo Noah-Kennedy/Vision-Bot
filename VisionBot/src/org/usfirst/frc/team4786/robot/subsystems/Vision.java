@@ -30,7 +30,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 /**The vision class is used to process and handle the majority of our computer vision
  *
  */
-public class Vision extends Subsystem implements PIDSource {
+public class Vision extends Subsystem {
 
 	//make all of the instance fields private
 	//it will screw up your multithreading if something other than the vision thread tries to directly access something from here
@@ -265,25 +265,5 @@ public class Vision extends Subsystem implements PIDSource {
 		return new Point(x,y);
 	}
 
-	/**
-	 * Currently source types other than kDisplacement are unsupported, this method does nothing
-	 */
-	public void setPIDSourceType(PIDSourceType pidSource) {
-		
-	}
 
-	/**
-	 * @return kDisplacement
-	 */
-	public PIDSourceType getPIDSourceType() {
-		return PIDSourceType.kDisplacement;
-	}
-
-	/**
-	 * Returns value used by PID
-	 */
-	@Override
-	public double pidGet() {
-		return getOffset();
-	}
 }
