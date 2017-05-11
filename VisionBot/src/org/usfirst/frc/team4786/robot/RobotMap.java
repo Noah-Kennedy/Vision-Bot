@@ -61,6 +61,18 @@ public class RobotMap {
 	public static final double fudgeFactor = 1;
 	public static final double turnFudgeFactor = 0.75;
 	
+	public static final int cameraFOVHeight = 240;
+	public static final int cameraFOVWidth = 320;
+	
+	//for calculating distance
+	public static final double heightOfTargetInFeet = 5.0/12; 
+	public static final double cameraFOVHeightInFeet = .19685;//10.6cm - 4.173228in - 0.19685ft
+	public static final double distanceAtCalibration = .262467;//12.8cm - 5.03937in - 0.262467ft
+	public static final double distanceOfCamFromFrontOfBot = 0;
+	
+	//for calculating angles
+	public static final double distanceBetweenCentersOfTargets = 8.25/12;
+	
 	//Wheel Radius measured in feet
 	public static final double WHEEL_RADIUS = 0.25;
 	

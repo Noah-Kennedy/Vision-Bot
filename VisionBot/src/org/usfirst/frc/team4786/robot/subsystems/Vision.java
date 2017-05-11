@@ -43,6 +43,7 @@ public class Vision extends Subsystem {
 	private Point middlePoint;
 	private int numTargets;
 	private int middleX;
+	private ArrayList<Double> distances;
 
 	/**
 	 * The constructor for the Vision subsystem
@@ -55,6 +56,8 @@ public class Vision extends Subsystem {
 		//and another for processing
 		processed = new Mat();
 		frame = new Mat();
+		
+		distances = new ArrayList<Double>();
 		
 		//instantiate usb camera to parameterized port
 		camera = CameraServer.getInstance().startAutomaticCapture(cam);
@@ -165,6 +168,14 @@ public class Vision extends Subsystem {
 				
 				filteredContours.add(contour);
 				rects.add(boundingRect);
+				
+				double distanceToTarget = ((RobotMap.heightOfTargetInFeet*frame.rows())/
+						(boundingRect.height*(.5*RobotMap.cameraFOVHeightInFeet)/RobotMap.distanceAtCalibration))-RobotMap.distanceOfCamFromFrontOfBot;
+				//Distance calculations, may need to be tuned
+				distanceToTarget += .088;
+				distanceToTarget /= 1.886;
+				
+				distances.add(distanceToTarget);
 			}
 		}
 
@@ -199,6 +210,10 @@ public class Vision extends Subsystem {
 		SmartDashboard.putNumber("Hue", d[1]);
 		SmartDashboard.putNumber("Hue", d[2]);
 		Imgproc.drawMarker(frame, middlePoint, new Scalar(0xFF,0xFF,0xFF));
+	}
+	
+	public void printDistances(){
+		System.out.println(distances);
 	}
 	
 
