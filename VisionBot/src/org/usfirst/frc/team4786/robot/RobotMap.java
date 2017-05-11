@@ -69,6 +69,11 @@ public class RobotMap {
 	public static final double cameraFOVHeightInFeet = .19685;//10.6cm - 4.173228in - 0.19685ft
 	public static final double distanceAtCalibration = .262467;//12.8cm - 5.03937in - 0.262467ft
 	public static final double distanceOfCamFromFrontOfBot = 0;
+	public static final double degreesPerPixelWidth = RobotMap.cameraFOVWidthInDegrees / RobotMap.width;
+	public static final double degreesPerPixelHeight = RobotMap.cameraFOVHeightInDegrees / RobotMap.height;
+	
+	public static final double cameraFOVWidthInDegrees = 43.84;
+	public static final double cameraFOVHeightInDegrees = 24.66;
 	
 	//for calculating angles
 	public static final double distanceBetweenCentersOfTargets = 8.25/12;

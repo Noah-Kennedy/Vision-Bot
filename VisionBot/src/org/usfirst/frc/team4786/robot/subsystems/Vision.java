@@ -39,11 +39,13 @@ public class Vision extends Subsystem {
 	private CvSink sink;
 	private CvSource stream;
 	private double centerX;
-	private int middleY;
+	private double middleY;
 	private Point middlePoint;
 	private int numTargets;
-	private int middleX;
+	private double middleX;
 	private ArrayList<Double> distances;
+	private ArrayList<Double> horizontalAngles;
+	private ArrayList<Double> verticalAngles;
 
 	/**
 	 * The constructor for the Vision subsystem
@@ -58,6 +60,8 @@ public class Vision extends Subsystem {
 		frame = new Mat();
 		
 		distances = new ArrayList<Double>();
+		horizontalAngles = new ArrayList<Double>();
+		verticalAngles = new ArrayList<Double>();
 		
 		//instantiate usb camera to parameterized port
 		camera = CameraServer.getInstance().startAutomaticCapture(cam);
@@ -79,10 +83,9 @@ public class Vision extends Subsystem {
 		stream = CameraServer.getInstance().putVideo(streamName, RobotMap.width, RobotMap.height);
 		
 		//set up some important constants, like the center pixel of the image
-		middleX = RobotMap.width / 2;
-		middleY = RobotMap.height / 2;
+		middleX = (RobotMap.width + 1) / 2;
+		middleY = (RobotMap.height + 1) / 2;
 		middlePoint = new Point(middleX,middleY);
-		
 	}
 
 	//never to be called by the programmer
@@ -169,6 +172,8 @@ public class Vision extends Subsystem {
 				filteredContours.add(contour);
 				rects.add(boundingRect);
 				
+				//distance finding
+				//TODO improve and clean up
 				double distanceToTarget = ((RobotMap.heightOfTargetInFeet*frame.rows())/
 						(boundingRect.height*(.5*RobotMap.cameraFOVHeightInFeet)/RobotMap.distanceAtCalibration))-RobotMap.distanceOfCamFromFrontOfBot;
 				//Distance calculations, may need to be tuned
@@ -176,6 +181,13 @@ public class Vision extends Subsystem {
 				distanceToTarget /= 1.886;
 				
 				distances.add(distanceToTarget);
+				
+				double angle = findHorizontalAngleToPoint(center(boundingRect));
+				horizontalAngles.add(angle);
+				
+				angle = findVerticalAngleToPoint(center(boundingRect));
+				verticalAngles.add(angle);
+				
 			}
 		}
 
@@ -199,21 +211,32 @@ public class Vision extends Subsystem {
 		
 	}
 	
+	private double findHorizontalAngleToPoint(Point p){
+		return (p.x - middleX) * RobotMap.degreesPerPixelWidth;
+	}
+	
+	private double findVerticalAngleToPoint(Point p){
+		return (p.y - middleY) * RobotMap.degreesPerPixelHeight;
+	}
+	
 	/**
 	 * print the HSV values of the center pixel to the smart dashboard.
 	 * Currently gives incorrect values.
 	 */
 	public void printHSV(){
 		if(frame.empty()) return;
-		double[] d = frame.get(middleX, middleY);
+		double[] d = frame.get((int) middleX, (int) middleY);
 		SmartDashboard.putNumber("Hue", d[0]);
 		SmartDashboard.putNumber("Hue", d[1]);
 		SmartDashboard.putNumber("Hue", d[2]);
-		Imgproc.drawMarker(frame, middlePoint, new Scalar(0xFF,0xFF,0xFF));
+		//Imgproc.drawMarker(frame, middlePoint, new Scalar(0xFF,0xFF,0xFF));
 	}
 	
 	public void printDistances(){
-		System.out.println(distances);
+		System.out.println("There are " + numTargets + " targets");
+		System.out.println("Horizontal Angles " + horizontalAngles);
+		System.out.println("Vertical Angles " + verticalAngles);
+		System.out.println("Distances " + distances);
 	}
 	
 
