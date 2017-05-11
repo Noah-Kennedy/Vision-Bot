@@ -40,6 +40,7 @@ public class Robot extends IterativeRobot {
 		//always do this in lambdas, it's just easier that way, so don't pay attention to the -> or the weird parameters
 		//just know that whatever is between the {} will run in the thread
 		Thread visionThread = new Thread( () -> {
+			
 			//while the thread is not being so rudely interrupted
 			while(!Thread.interrupted()){
 				vision.grabFrame();
