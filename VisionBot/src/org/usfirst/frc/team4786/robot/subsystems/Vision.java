@@ -174,8 +174,11 @@ public class Vision extends Subsystem {
 				
 				//distance finding
 				//TODO improve and clean up, possibly rewrite
-				double distanceToTarget = ((RobotMap.heightOfTargetInFeet*frame.rows())/
-						(boundingRect.height*(.5*RobotMap.cameraFOVHeightInFeet)/RobotMap.distanceAtCalibration))-RobotMap.distanceOfCamFromFrontOfBot;
+				/*double distanceToTarget = ((RobotMap.heightOfTargetInFeet*frame.rows())/
+						(boundingRect.height*(.5*RobotMap.cameraFOVHeightInFeet)/RobotMap.distanceAtCalibration))-RobotMap.distanceOfCamFromFrontOfBot;*/
+				
+				double rads = Math.toRadians(findVerticalAngleToPoint(boundingRect.tl()));
+				double distanceToTarget = (2.0 * RobotMap.heightOfTargetInFeet - RobotMap.cameraHeight) / (Math.tan(rads));
 				//Distance calculations, may need to be tuned
 				distanceToTarget += .088;
 				distanceToTarget /= 1.886;
