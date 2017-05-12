@@ -173,7 +173,7 @@ public class Vision extends Subsystem {
 				rects.add(boundingRect);
 				
 				//distance finding
-				//TODO improve and clean up
+				//TODO improve and clean up, possibly rewrite
 				double distanceToTarget = ((RobotMap.heightOfTargetInFeet*frame.rows())/
 						(boundingRect.height*(.5*RobotMap.cameraFOVHeightInFeet)/RobotMap.distanceAtCalibration))-RobotMap.distanceOfCamFromFrontOfBot;
 				//Distance calculations, may need to be tuned
@@ -182,6 +182,9 @@ public class Vision extends Subsystem {
 				
 				distances.add(distanceToTarget);
 				
+				//angle finding, uses linear approximation method
+				//its close enough with our camera
+				//add them to a list of length numTargets
 				double angle = findHorizontalAngleToPoint(center(boundingRect));
 				horizontalAngles.add(angle);
 				
@@ -211,10 +214,20 @@ public class Vision extends Subsystem {
 		
 	}
 	
+	/**
+	 * Find the horizontal angle from the normal
+	 * @param p the point of interest
+	 * @return the angle from the normal to the point horizontally
+	 */
 	private double findHorizontalAngleToPoint(Point p){
 		return (p.x - middleX) * RobotMap.degreesPerPixelWidth;
 	}
 	
+	/**
+	 * Find the vertical angle from the normal
+	 * @param p the point of interest
+	 * @return the angle from the normal to the point vertically
+	 */
 	private double findVerticalAngleToPoint(Point p){
 		return (p.y - middleY) * RobotMap.degreesPerPixelHeight;
 	}
