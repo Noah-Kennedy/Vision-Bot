@@ -185,9 +185,12 @@ public class Vision extends Subsystem {
 				//angle finding, uses linear approximation method
 				//its close enough with our camera
 				//add them to a list of length numTargets
+				
+				//horizontal
 				double angle = findHorizontalAngleToPoint(center(boundingRect));
 				horizontalAngles.add(angle);
 				
+				//vertical
 				angle = findVerticalAngleToPoint(center(boundingRect));
 				verticalAngles.add(angle);
 				
@@ -209,8 +212,14 @@ public class Vision extends Subsystem {
 			Imgproc.drawMarker(frame, rect.br(), new Scalar(0xFF, 0, 0));
 			Imgproc.drawMarker(frame, rect.tl(), new Scalar(0xFF, 0, 0));
 		}
+		
+		//if the number of targets > 0, find the point in the center of them all
 		if(numTargets > 0)
 			centerX = center(rects).x;
+		
+		//draw a point in the middle of the screen
+		Imgproc.drawMarker(frame, middlePoint, new Scalar(0xFF,0xFF,0xFF));
+
 		
 	}
 	
@@ -242,7 +251,6 @@ public class Vision extends Subsystem {
 		SmartDashboard.putNumber("Hue", d[0]);
 		SmartDashboard.putNumber("Hue", d[1]);
 		SmartDashboard.putNumber("Hue", d[2]);
-		//Imgproc.drawMarker(frame, middlePoint, new Scalar(0xFF,0xFF,0xFF));
 	}
 	
 	public void printDistances(){
