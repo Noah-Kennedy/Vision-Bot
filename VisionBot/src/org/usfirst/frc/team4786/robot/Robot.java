@@ -41,7 +41,7 @@ public class Robot extends IterativeRobot {
 		//just know that whatever is between the {} will run in the thread
 		Thread visionThread = new Thread( () -> {
 			
-			//while the thread is not being so rudely interrupted
+			//while the thread is not being so rudely interrupted by uncivilized events
 			while(!Thread.interrupted()){
 				vision.grabFrame();
 				vision.process();

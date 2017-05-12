@@ -40,31 +40,38 @@ public class RobotMap {
 	public static final int highSat = 255;
 	public static final int highVal = 255;
 	
-	//vision PID
-	public static final double visionP = .05;
-	public static final double visI = 0;
-	public static final double visD = 0;
-	public static final double allowableError = 10;
-	
+	//length of meshbot
 	public static final double MESHBOT_ROBOT_LENGTH = 2.34375; //In feet
 	
 	//General PID Constants
+	//error constants
 	public static final int ERROR_CONSTANT_LEFT = 100; //In native units
 	public static final int ERROR_CONSTANT_RIGHT = 100;
 	public static final int ALLOWABLE_TURN_ERROR = 1; //In degrees
+	
+	//encoder ticks
 	public static final int DRIVETRAIN_ENCODER_CODES_PER_REV_LEFT = 360;
 	public static final int DRIVETRAIN_ENCODER_CODES_PER_REV_RIGHT = 360;
+	
+	//ramp rate
 	public static final double CLOSED_LOOP_RAMP_RATE = 0.015625;
+	
+	//izone
 	public static final int IZONE = 0;
+	
+	//profile
 	public static final int DRIVEBASE_PROFILE = 0;
-	public static final double MAXIMUM_SPEED_VELOCITY_PID = 0.6;
+	
+	//fudge factors
 	public static final double fudgeFactor = 1;
 	public static final double turnFudgeFactor = 0.75;
 	
+	//camera FOV for jeremy's code
 	public static final int cameraFOVHeight = 240;
 	public static final int cameraFOVWidth = 320;
 	
 	//for calculating distance
+	//my beautiful code
 	public static final double heightOfTargetInFeet = 5.0/12; 
 	public static final double cameraFOVHeightInFeet = .19685;//10.6cm - 4.173228in - 0.19685ft
 	public static final double distanceAtCalibration = .262467;//12.8cm - 5.03937in - 0.262467ft
@@ -72,6 +79,7 @@ public class RobotMap {
 	public static final double degreesPerPixelWidth = RobotMap.cameraFOVWidthInDegrees / RobotMap.width;
 	public static final double degreesPerPixelHeight = RobotMap.cameraFOVHeightInDegrees / RobotMap.height;
 	
+	//camera FOV in degrees
 	public static final double cameraFOVWidthInDegrees = 43.84;
 	public static final double cameraFOVHeightInDegrees = 24.66;
 	
@@ -84,6 +92,9 @@ public class RobotMap {
 	//Distance between wheels measured in feet
 	public static final double WHEEL_SEPARATION = 2;
 
+	//PID for driveTo position
+	
+	//left side PID constants
 	public static final double LeftP = 0.0001;
 	public static final double LeftI = 0.000010;
 	public static final double LeftD = 0.0;
@@ -94,6 +105,7 @@ public class RobotMap {
 	public static final double RightD = 0.0;
 	public static final double RightF = 0.0;
 	
+	//turn PID constants
 	public static final double TurnP = 0.02;
 	public static final double TurnI = 0.0;
 	public static final double TurnD = 0.0;
