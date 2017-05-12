@@ -182,9 +182,9 @@ public class Vision extends Subsystem {
 				
 				distances.add(distanceToTarget);
 				
-				//angle finding, uses linear approximation method
-				//its close enough with our camera
-				//add them to a list of length numTargets
+				/*angle finding, uses linear approximation method
+				because it's close enough with our camera and
+				add them to a list of length numTargets*/
 				
 				//horizontal
 				double angle = findHorizontalAngleToPoint(center(boundingRect));
