@@ -343,6 +343,16 @@ public class Vision extends Subsystem {
 		return r.height > r.width;
 	}
 	
-
+	/**
+	 * Tests whether or not we have the correct ratio of bounding rect size to contour size
+	 * Basically makes sure that we have the correct amount of rectangularness
+	 * @param c is the contour
+	 * @param r is the bounding rectangle
+	 * @return whether we are within the ratio interval
+	 */
+	private static boolean getPassesContourToRectRatio(MatOfPoint c, Rect r){
+		return Imgproc.contourArea(c) / r.area() >= RobotMap.contourToRectLowerPercentage
+				&& Imgproc.contourArea(c) / r.area() <= RobotMap.contourToRectUpperPercentage;
+	}
 
 }
