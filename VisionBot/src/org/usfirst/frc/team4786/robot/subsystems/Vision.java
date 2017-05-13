@@ -168,20 +168,22 @@ public class Vision extends Subsystem {
 				filteredContours.add(contour);
 				rects.add(boundingRect);
 				
-				//System.out.println(Imgproc.contourArea(contour) / boundingRect.area() > RobotMap.contourToRectPercentage);
-				//distance finding
+				//System.out.println(Imgproc.contourArea(contour) / boundingRect.area());
+				
+				//distance finding from Jeremy
 				//TODO improve and clean up, possibly rewrite
 				/*double distanceToTarget = ((RobotMap.heightOfTargetInFeet*frame.rows())/
-						(boundingRect.height*(.5*RobotMap.cameraFOVHeightInFeet)/RobotMap.distanceAtCalibration))-RobotMap.distanceOfCamFromFrontOfBot;*/
+						(boundingRect.height*(.5*RobotMap.cameraFOVHeightInFeet)/RobotMap.distanceAtCalibration))-RobotMap.distanceOfCamFromFrontOfBot;
+										//Distance calculations, may need to be tuned
+				distanceToTarget += .088;
+				distanceToTarget /= 1.886;*/
 				
 				//my own distance finding
 				//uses angles and geometry, not fudge factors and approximations
 				//has external documentation
 				double rads = Math.toRadians(findVerticalAngleToPoint(boundingRect.tl()));
 				double distanceToTarget = (2.0 * RobotMap.heightOfTargetInFeet - RobotMap.cameraHeight) / (Math.tan(rads));
-				//Distance calculations, may need to be tuned
-				//distanceToTarget += .088;
-				//distanceToTarget /= 1.886;
+
 				
 				distances.add(distanceToTarget);
 				
