@@ -330,6 +330,19 @@ public class Vision extends Subsystem {
 		y /= ((double) rects.size());
 		return new Point(x,y);
 	}
+	
+	
+	//TODO adjust conditions for next years game
+	//Conditions for contours and rects to pass to not be filtered out
+	
+	/**
+	 * Tests to see whether or not we are taller than wide
+	 * @return whether or not we have passed our width v height test
+	 */
+	private static boolean getTallerThanWide(Rect r){
+		return r.height > r.width;
+	}
+	
 
 
 }

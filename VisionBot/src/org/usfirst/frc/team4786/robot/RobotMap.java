@@ -33,6 +33,8 @@ public class RobotMap {
 	public static final int highRedValue = 255;
 	
 	//thresholds for pixel HSV
+	//TODO get more precise tuning
+	//TODO remove value thresholds
 	public static final int lowHue = 55;
 	public static final int lowSat = 225;
 	public static final int lowVal = 200;
