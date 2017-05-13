@@ -257,6 +257,11 @@ public class Vision extends Subsystem {
 		SmartDashboard.putNumber("Hue", d[2]);
 	}
 	
+	//TODO remove when tested
+	/**
+	 * Used for testing purposes only
+	 * Will make everything super slow and kill frame rates
+	 */
 	public void printDistances(){
 		//System.out.println("There are " + numTargets + " targets");
 		System.out.println("Horizontal Angles " + horizontalAngles);
