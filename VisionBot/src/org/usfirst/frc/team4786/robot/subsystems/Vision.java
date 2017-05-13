@@ -361,5 +361,6 @@ public class Vision extends Subsystem {
 		return Imgproc.contourArea(c) / r.area() >= RobotMap.contourToRectLowerPercentage
 				&& Imgproc.contourArea(c) / r.area() <= RobotMap.contourToRectUpperPercentage;
 	}
+	
 
 }
