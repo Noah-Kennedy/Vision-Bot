@@ -39,6 +39,7 @@ public class Robot extends IterativeRobot {
 		//thread for vision
 		//always do this in lambdas, it's just easier that way, so don't pay attention to the -> or the weird parameters
 		//just know that whatever is between the {} will run in the thread
+		
 		Thread visionThread = new Thread( () -> {
 			
 			//while the thread is not being so rudely interrupted by uncivilized events
@@ -46,7 +47,7 @@ public class Robot extends IterativeRobot {
 				vision.grabFrame();
 				vision.process();
 				vision.putFrame();
-				vision.printDistances();
+				//vision.printDistances();
 			}
 			
 		});

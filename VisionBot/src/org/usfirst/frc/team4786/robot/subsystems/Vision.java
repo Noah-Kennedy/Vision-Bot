@@ -127,10 +127,6 @@ public class Vision extends Subsystem {
 		
 		//blurs the image to remove false positives
 		Imgproc.GaussianBlur(frame, processed, new Size(17, 17), 3);
-
-		//stop this madness if the processed frame is empty
-		//TODO figure out if this is necessary
-		//if(processed.empty()) return;
 		
 		//we are going to use HSV, not BGR for better filtration
 		//convert BGR to HSV
@@ -166,22 +162,26 @@ public class Vision extends Subsystem {
 			//bounding rect objects are rectangles whose bounderies encompass all of the contour
 			Rect boundingRect = boundingRect(contour);
 			//check to see if we are a tallish rectangle with a largish area
-			if (boundingRect.height > boundingRect.width &&
-					Imgproc.contourArea(contour) / boundingRect.area() > RobotMap.contourToRectPercentage)	{
+			if (boundingRect.height > boundingRect.width)	{
 				
+				//add the contours and bounding rects to our filtered lists
 				filteredContours.add(contour);
 				rects.add(boundingRect);
 				
+				//System.out.println(Imgproc.contourArea(contour) / boundingRect.area() > RobotMap.contourToRectPercentage);
 				//distance finding
 				//TODO improve and clean up, possibly rewrite
 				/*double distanceToTarget = ((RobotMap.heightOfTargetInFeet*frame.rows())/
 						(boundingRect.height*(.5*RobotMap.cameraFOVHeightInFeet)/RobotMap.distanceAtCalibration))-RobotMap.distanceOfCamFromFrontOfBot;*/
 				
+				//my own distance finding
+				//uses angles and geometry, not fudge factors and approximations
+				//has external documentation
 				double rads = Math.toRadians(findVerticalAngleToPoint(boundingRect.tl()));
 				double distanceToTarget = (2.0 * RobotMap.heightOfTargetInFeet - RobotMap.cameraHeight) / (Math.tan(rads));
 				//Distance calculations, may need to be tuned
-				distanceToTarget += .088;
-				distanceToTarget /= 1.886;
+				//distanceToTarget += .088;
+				//distanceToTarget /= 1.886;
 				
 				distances.add(distanceToTarget);
 				
@@ -202,6 +202,7 @@ public class Vision extends Subsystem {
 
 		//draw our contours
 		drawContours(frame, filteredContours, -1, new Scalar(0, 0xFF, 0), FILLED);
+
 		//figure out how many targets there are
 		numTargets = filteredContours.size();
 		
@@ -257,10 +258,10 @@ public class Vision extends Subsystem {
 	}
 	
 	public void printDistances(){
-		System.out.println("There are " + numTargets + " targets");
+		//System.out.println("There are " + numTargets + " targets");
 		System.out.println("Horizontal Angles " + horizontalAngles);
-		System.out.println("Vertical Angles " + verticalAngles);
-		System.out.println("Distances " + distances);
+		//System.out.println("Vertical Angles " + verticalAngles);
+		//System.out.println("Distances " + distances);
 	}
 	
 
