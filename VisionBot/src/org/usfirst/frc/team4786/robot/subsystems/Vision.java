@@ -145,6 +145,17 @@ public class Vision extends Subsystem {
 		//removes everything not in our filter range
 		Core.inRange(processed, lowRange, highRange, processed);
 		
+		//morphologies, remove false positives and negatives
+		
+		//opening, removes false positives
+		Imgproc.morphologyEx(processed, processed, Imgproc.MORPH_OPEN,
+				Imgproc.getStructuringElement(Imgproc.MORPH_CROSS, new Size(17,17)));
+		
+		//closing, removes false negatives
+		Imgproc.morphologyEx(processed, processed, Imgproc.MORPH_CLOSE,
+				Imgproc.getStructuringElement(Imgproc.MORPH_CROSS, new Size(17,17)));
+		
+		
 		//create an arraylist to hold the unfiltered contours
 		ArrayList<MatOfPoint> contours = new ArrayList<MatOfPoint>();
 
