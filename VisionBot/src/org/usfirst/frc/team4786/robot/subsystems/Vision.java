@@ -192,10 +192,8 @@ public class Vision extends Subsystem {
 				//my own distance finding
 				//uses angles and geometry, not fudge factors and approximations
 				//has external documentation
-				double rads = Math.toRadians(findVerticalAngleToPoint(boundingRect.tl()));
-				double distanceToTarget = (2.0 * RobotMap.heightOfTargetInFeet - RobotMap.cameraHeight) / (Math.tan(rads));
-
-				
+				double rads = Math.toRadians(findVerticalAngleToPoint(boundingRect.tl()) - RobotMap.cameraAngle);
+				double distanceToTarget = (RobotMap.heightOfTargetInFeet + RobotMap.bottomHeight - RobotMap.cameraHeight) / (Math.tan(rads));
 				distances.add(distanceToTarget);
 				
 				/*angle finding, uses linear approximation method

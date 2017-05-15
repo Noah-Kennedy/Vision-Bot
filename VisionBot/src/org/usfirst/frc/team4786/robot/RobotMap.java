@@ -82,8 +82,10 @@ public class RobotMap {
 	public static final double degreesPerPixelWidth = RobotMap.cameraFOVWidthInDegrees / RobotMap.width;
 	public static final double degreesPerPixelHeight = RobotMap.cameraFOVHeightInDegrees / RobotMap.height;
 	
+	public static final double bottomHeight = 10.75 / 12;
+	public static final double cameraAngle = 30;
 	//my distance code
-	public static final double cameraHeight = 0;
+	public static final double cameraHeight = 0.25;
 	
 	//camera FOV in degrees
 	public static final double cameraFOVWidthInDegrees = 43.84;
@@ -116,4 +118,5 @@ public class RobotMap {
 	public static final double TurnI = 0.0;
 	public static final double TurnD = 0.0;
 	public static final double TurnF = 0.0;
+
 }
