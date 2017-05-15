@@ -147,13 +147,13 @@ public class Vision extends Subsystem {
 		
 		//morphologies, remove false positives and negatives
 		
-		//opening, removes false positives
+		/*//opening, removes false positives
 		Imgproc.morphologyEx(processed, processed, Imgproc.MORPH_OPEN,
-				Imgproc.getStructuringElement(Imgproc.MORPH_CROSS, new Size(17,17)));
+				Imgproc.getStructuringElement(Imgproc.MORPH_CROSS, new Size(3,3)));
 		
 		//closing, removes false negatives
 		Imgproc.morphologyEx(processed, processed, Imgproc.MORPH_CLOSE,
-				Imgproc.getStructuringElement(Imgproc.MORPH_CROSS, new Size(17,17)));
+				Imgproc.getStructuringElement(Imgproc.MORPH_CROSS, new Size(17,17)));*/
 		
 		
 		//create an arraylist to hold the unfiltered contours
@@ -372,6 +372,5 @@ public class Vision extends Subsystem {
 		return Imgproc.contourArea(c) / r.area() >= RobotMap.contourToRectLowerPercentage
 				&& Imgproc.contourArea(c) / r.area() <= RobotMap.contourToRectUpperPercentage;
 	}
-	
 
 }

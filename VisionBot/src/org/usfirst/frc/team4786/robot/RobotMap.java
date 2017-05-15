@@ -37,9 +37,9 @@ public class RobotMap {
 	//TODO get more precise tuning
 	//TODO remove value thresholds
 	public static final int lowHue = 55;
-	public static final int lowSat = 225;
-	public static final int lowVal = 200;
-	public static final int highHue = 65;
+	public static final int lowSat = 0;
+	public static final int lowVal = 0;
+	public static final int highHue = 70;
 	public static final int highSat = 255;
 	public static final int highVal = 255;
 	
