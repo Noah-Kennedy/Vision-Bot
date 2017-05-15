@@ -153,7 +153,7 @@ public class Vision extends Subsystem {
 		
 		//closing, removes false negatives
 		Imgproc.morphologyEx(processed, processed, Imgproc.MORPH_CLOSE,
-				Imgproc.getStructuringElement(Imgproc.MORPH_CROSS, new Size(17,17)));
+				Imgproc.getStructuringElement(Imgproc.MORPH_CROSS, new Size(9,9)));
 		
 		
 		//create an arraylist to hold the unfiltered contours
