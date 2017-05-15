@@ -213,7 +213,7 @@ public class Vision extends Subsystem {
 			}
 		}
 
-		//draw our contours
+		//draw our filtered contours
 		drawContours(frame, filteredContours, -1, new Scalar(0, 0xFF, 0), FILLED);
 
 		//figure out how many targets there are
