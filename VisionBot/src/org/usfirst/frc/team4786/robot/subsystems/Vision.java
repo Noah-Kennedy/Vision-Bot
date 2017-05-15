@@ -284,10 +284,11 @@ public class Vision extends Subsystem {
 	
 	public void showSpacialInfo(){
 		SmartDashboard.putNumber("1st target horizontal angle", horizontalAngles.get(0));
-		SmartDashboard.putNumber("2st target horizontal angle", horizontalAngles.get(1));
 		SmartDashboard.putNumber("1st target vertical angle", verticalAngles.get(0));
-		SmartDashboard.putNumber("2st target vertical angle", verticalAngles.get(1));
 		SmartDashboard.putNumber("1st target distance", distances.get(0));
+		
+		SmartDashboard.putNumber("2st target horizontal angle", horizontalAngles.get(1));
+		SmartDashboard.putNumber("2st target vertical angle", verticalAngles.get(1));
 		SmartDashboard.putNumber("2st target distance", distances.get(1));
 
 	}
