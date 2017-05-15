@@ -47,7 +47,7 @@ public class Robot extends IterativeRobot {
 				vision.grabFrame();
 				vision.process();
 				vision.putFrame();
-				//vision.printDistances();
+				vision.showSpacialInfo();
 			}
 			
 		});
