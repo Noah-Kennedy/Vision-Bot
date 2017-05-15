@@ -160,7 +160,7 @@ public class Vision extends Subsystem {
 		ArrayList<MatOfPoint> contours = new ArrayList<MatOfPoint>();
 
 		//find the contours in our image
-		findContours(processed, contours, processed, RETR_LIST, CHAIN_APPROX_NONE);
+		findContours(processed, contours, processed, RETR_LIST, Imgproc.CHAIN_APPROX_SIMPLE);
 
 		//list of filtered contours
 		ArrayList<MatOfPoint> filteredContours = new ArrayList<MatOfPoint>();
