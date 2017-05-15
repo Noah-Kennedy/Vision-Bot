@@ -91,7 +91,6 @@ public class DriveTrain extends Subsystem implements PIDOutput {
 		 */
 		LiveWindow.addActuator("DriveTrain", "TurnController", turnController);
 
-
 	}
 
 	/**

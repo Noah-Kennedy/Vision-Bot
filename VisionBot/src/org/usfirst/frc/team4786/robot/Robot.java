@@ -31,33 +31,34 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void robotInit() {
 
-		vision = new Vision("Stream",0);
+		vision = new Vision("Stream", 0);
 		driveTrain = new DriveTrain();
 
 		oi = new OI();
-		
-		//thread for vision
-		//always do this in lambdas, it's just easier that way, so don't pay attention to the -> or the weird parameters
-		//just know that whatever is between the {} will run in the thread
-		
-		Thread visionThread = new Thread( () -> {
-			
-			//while the thread is not being so rudely interrupted by uncivilized events
-			while(!Thread.interrupted()){
+
+		// thread for vision
+		// always do this in lambdas, it's just easier that way, so don't pay
+		// attention to the -> or the weird parameters
+		// just know that whatever is between the {} will run in the thread
+
+		Thread visionThread = new Thread(() -> {
+
+			// while the thread is not being so rudely interrupted by
+			// uncivilized events
+			while (!Thread.interrupted()) {
 				vision.grabFrame();
 				vision.process();
 				vision.putFrame();
 				vision.showSpacialInfo();
 			}
-			
+
 		});
-		
-		//start thread
+
+		// start thread
 		visionThread.start();
-		
-		
+
 	}
-	
+
 	/**
 	 * This function is called once each time the robot enters Disabled mode.
 	 * You can use it to reset any subsystem information you want to clear when
@@ -100,8 +101,9 @@ public class Robot extends IterativeRobot {
 
 	@Override
 	public void teleopInit() {
-		if(auto != null) auto.cancel();
-		
+		if (auto != null)
+			auto.cancel();
+
 	}
 
 	/**

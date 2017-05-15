@@ -11,11 +11,11 @@ import edu.wpi.first.wpilibj.buttons.JoystickButton;
 public class OI {
 	public XboxController xbox;
 	Button aButton;
-	
-	public OI(){
+
+	public OI() {
 		xbox = new XboxController(0);
 		aButton = new JoystickButton(xbox, Buttons.A);
-		//aButton.whenPressed(new CenterOnPeg());
+		// aButton.whenPressed(new CenterOnPeg());
 	}
-	
+
 }
