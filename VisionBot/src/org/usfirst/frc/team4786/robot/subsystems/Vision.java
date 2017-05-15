@@ -304,17 +304,7 @@ public class Vision extends Subsystem {
 		SmartDashboard.putNumber("Hue", d[2]);
 	}
 
-	// TODO remove when tested
-	/**
-	 * Used for testing purposes only Will make everything super slow and kill
-	 * frame rates
-	 */
-	public void printDistances() {
-		// System.out.println("There are " + numTargets + " targets");
-		System.out.println("Horizontal Angles " + horizontalAngles);
-		// System.out.println("Vertical Angles " + verticalAngles);
-		// System.out.println("Distances " + distances);
-	}
+
 
 	public void showSpacialInfo() {
 		SmartDashboard.putNumber("1st target horizontal angle", horizontalAngles.get(0));
@@ -397,7 +387,6 @@ public class Vision extends Subsystem {
 		return new Point(x, y);
 	}
 
-	// TODO adjust conditions for next years game
 	// Conditions for contours and rects to pass to not be filtered out
 
 	/**
@@ -405,6 +394,7 @@ public class Vision extends Subsystem {
 	 * 
 	 * @return whether or not we have passed our width v height test
 	 */
+	@SuppressWarnings("unused")
 	private static boolean getTallerThanWide(Rect r) {
 		return r.height > r.width;
 	}
@@ -420,9 +410,22 @@ public class Vision extends Subsystem {
 	 *            is the bounding rectangle
 	 * @return whether we are within the ratio interval
 	 */
+	@SuppressWarnings("unused")
 	private static boolean getPassesContourToRectRatio(MatOfPoint c, Rect r) {
 		return Imgproc.contourArea(c) / r.area() >= RobotMap.contourToRectLowerPercentage
 				&& Imgproc.contourArea(c) / r.area() <= RobotMap.contourToRectUpperPercentage;
+	}
+	
+	public double getDistance(int index){
+		return distances.get(index);
+	}
+	
+	public double getVerticalAngles(int index){
+		return verticalAngles.get(index);
+	}
+	
+	public double getHorizontalAngles(int index){
+		return horizontalAngles.get(index);
 	}
 
 }
