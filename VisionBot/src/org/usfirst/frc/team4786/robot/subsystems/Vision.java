@@ -416,6 +416,16 @@ public class Vision extends Subsystem {
 				&& Imgproc.contourArea(c) / r.area() <= RobotMap.contourToRectUpperPercentage;
 	}
 	
+	@SuppressWarnings("unused")
+	private static boolean getPassesAspectRatioTest(Rect r){
+		//return true;
+		return getAspectRatio(r) >= .4 && getAspectRatio(r) <= .6;
+	}
+	
+	private static double getAspectRatio(Rect r){
+		return (double) ((double) r.width) / r.height;
+	}
+	
 	public double getDistance(int index){
 		return distances.get(index);
 	}
