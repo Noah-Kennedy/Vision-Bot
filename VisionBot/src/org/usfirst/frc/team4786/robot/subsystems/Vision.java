@@ -49,6 +49,9 @@ public class Vision extends Subsystem {
 	private ArrayList<Double> distances;
 	private ArrayList<Double> horizontalAngles;
 	private ArrayList<Double> verticalAngles;
+	private ArrayList<Double> aspectRatios;
+	private ArrayList<Double> solidities;
+
 
 	/**
 	 * The constructor for the Vision subsystem
@@ -69,6 +72,8 @@ public class Vision extends Subsystem {
 		distances = new ArrayList<Double>();
 		horizontalAngles = new ArrayList<Double>();
 		verticalAngles = new ArrayList<Double>();
+		aspectRatios = new ArrayList<Double>();
+		solidities = new ArrayList<Double>();
 
 		// instantiate usb camera to parameterized port
 		camera = CameraServer.getInstance().startAutomaticCapture(cam);
@@ -195,7 +200,9 @@ public class Vision extends Subsystem {
 			// all of the contour
 			Rect boundingRect = boundingRect(contour);
 			// check to see if we are a tallish rectangle with a largish area
-			if (boundingRect.height > boundingRect.width) {
+			if (boundingRect.height > boundingRect.width
+					&& Vision.getPassesAspectRatioTest(boundingRect)
+					&& Vision.getPassesContourToRectRatio(contour, boundingRect)) {
 
 				// add the contours and bounding rects to our filtered lists
 				filteredContours.add(contour);
@@ -238,7 +245,8 @@ public class Vision extends Subsystem {
 				// vertical
 				angle = findVerticalAngleToPoint(center(boundingRect));
 				verticalAngles.add(angle);
-
+				aspectRatios.add(getAspectRatio(boundingRect));
+				solidities.add(Vision.getSolidity(contour, boundingRect));
 			}
 		}
 
@@ -307,13 +315,22 @@ public class Vision extends Subsystem {
 
 
 	public void showSpacialInfo() {
+		if(numTargets < 1) return;
 		SmartDashboard.putNumber("1st target horizontal angle", horizontalAngles.get(0));
 		SmartDashboard.putNumber("1st target vertical angle", verticalAngles.get(0));
 		SmartDashboard.putNumber("1st target distance", distances.get(0));
+		SmartDashboard.putNumber("1st target aspect ratio", aspectRatios.get(0));
+		SmartDashboard.putNumber("1st target solidity", solidities.get(0));
 
+
+		if(numTargets < 2) return;
 		SmartDashboard.putNumber("2st target horizontal angle", horizontalAngles.get(1));
 		SmartDashboard.putNumber("2st target vertical angle", verticalAngles.get(1));
 		SmartDashboard.putNumber("2st target distance", distances.get(1));
+		SmartDashboard.putNumber("2st target aspect ratio", aspectRatios.get(1));
+		SmartDashboard.putNumber("sst target solidity", solidities.get(1));
+
+
 
 	}
 
@@ -410,16 +427,18 @@ public class Vision extends Subsystem {
 	 *            is the bounding rectangle
 	 * @return whether we are within the ratio interval
 	 */
-	@SuppressWarnings("unused")
 	private static boolean getPassesContourToRectRatio(MatOfPoint c, Rect r) {
 		return Imgproc.contourArea(c) / r.area() >= RobotMap.contourToRectLowerPercentage
 				&& Imgproc.contourArea(c) / r.area() <= RobotMap.contourToRectUpperPercentage;
 	}
 	
-	@SuppressWarnings("unused")
+	private static double getSolidity(MatOfPoint c, Rect r) {
+		return Imgproc.contourArea(c) / r.area();
+	}
+	
 	private static boolean getPassesAspectRatioTest(Rect r){
 		//return true;
-		return getAspectRatio(r) >= .4 && getAspectRatio(r) <= .6;
+		return getAspectRatio(r) >= RobotMap.lowAspectRatio && getAspectRatio(r) <= RobotMap.highAspectRatio;
 	}
 	
 	private static double getAspectRatio(Rect r){

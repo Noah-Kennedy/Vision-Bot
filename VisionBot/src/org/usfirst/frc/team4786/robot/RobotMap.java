@@ -15,7 +15,7 @@ public class RobotMap {
 	// vision constants for image size
 	public static final int minimumArea = 0;
 	public static final double contourToRectUpperPercentage = 1;
-	public static final double contourToRectLowerPercentage = .5;
+	public static final double contourToRectLowerPercentage = 0;
 
 	// camera settings
 	public static final int cameraFPS = 15;
@@ -86,10 +86,13 @@ public class RobotMap {
 	public static final double degreesPerPixelWidth = RobotMap.cameraFOVWidthInDegrees / RobotMap.width;
 	public static final double degreesPerPixelHeight = RobotMap.cameraFOVHeightInDegrees / RobotMap.height;
 
-	public static final double bottomHeight = 10.75 / 12;
-	public static final double cameraAngle = 30;
+	public static final double bottomHeight = 11.0 / 12;
+	public static final double cameraAngle = 15;
 	// my distance code
-	public static final double cameraHeight = 0.25;
+	public static final double cameraHeight = 7.0/12;
+	
+	public static final double lowAspectRatio = .3;
+	public static final double highAspectRatio = .5;
 
 	// camera FOV in degrees
 	public static final double cameraFOVWidthInDegrees = 43.84;
