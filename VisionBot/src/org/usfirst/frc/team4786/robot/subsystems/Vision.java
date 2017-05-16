@@ -208,44 +208,27 @@ public class Vision extends Subsystem {
 				filteredContours.add(contour);
 				rects.add(boundingRect);
 
-				// System.out.println(Imgproc.contourArea(contour) /
-				// boundingRect.area());
-
-				// distance finding from Jeremy
-				// TODO improve and clean up, possibly rewrite
-				/*
-				 * double distanceToTarget =
-				 * ((RobotMap.heightOfTargetInFeet*frame.rows())/
-				 * (boundingRect.height*(.5*RobotMap.cameraFOVHeightInFeet)/
-				 * RobotMap.distanceAtCalibration))-RobotMap.
-				 * distanceOfCamFromFrontOfBot; //Distance calculations, may
-				 * need to be tuned distanceToTarget += .088; distanceToTarget
-				 * /= 1.886;
-				 */
-
 				// my own distance finding
 				// uses angles and geometry, not fudge factors and
 				// approximations
 				// has external documentation
-				double rads = Math.toRadians(findVerticalAngleToPoint(boundingRect.tl()) - RobotMap.cameraAngle);
+				/*double rads = Math.toRadians(findVerticalAngleToPoint(boundingRect.tl()) - RobotMap.cameraAngle);
 				double distanceToTarget = (RobotMap.heightOfTargetInFeet + RobotMap.bottomHeight
-						- RobotMap.cameraHeight) / (Math.tan(rads));
-				distances.add(distanceToTarget);
-
-				/*
-				 * angle finding, uses linear approximation method because it's
-				 * close enough with our camera and add them to a list of length
-				 * numTargets
-				 */
-
+						- RobotMap.cameraHeight) / (Math.tan(rads));*/
+				distances.add(this.getDistanceFromTarget(boundingRect));
+				
 				// horizontal
-				double angle = findHorizontalAngleToPoint(center(boundingRect));
-				horizontalAngles.add(angle);
+				//double angle = findHorizontalAngleToPoint(center(boundingRect));
+				horizontalAngles.add(findHorizontalAngleToPoint(center(boundingRect)));
 
 				// vertical
-				angle = findVerticalAngleToPoint(center(boundingRect));
-				verticalAngles.add(angle);
+				//angle = findVerticalAngleToPoint(center(boundingRect));
+				verticalAngles.add(findVerticalAngleToPoint(center(boundingRect)));
+				
+				//aspect ratios
 				aspectRatios.add(getAspectRatio(boundingRect));
+				
+				//solidities
 				solidities.add(Vision.getSolidity(contour, boundingRect));
 			}
 		}
@@ -297,6 +280,12 @@ public class Vision extends Subsystem {
 	 */
 	private double findVerticalAngleToPoint(Point p) {
 		return (p.y - middleY) * RobotMap.degreesPerPixelHeight;
+	}
+	
+	private double getDistanceFromTarget(Rect boundingRect){
+		return (RobotMap.heightOfTargetInFeet + RobotMap.bottomHeight
+				- RobotMap.cameraHeight) /
+				(Math.tan(Math.toRadians(findVerticalAngleToPoint(boundingRect.tl()) - RobotMap.cameraAngle)));
 	}
 
 	/**
