@@ -87,7 +87,7 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void autonomousInit() {
-		auto = new TurnToAngle(90);
+		auto = new TurnToAngle(vision.getHorizontalAngles(0));
 		auto.start();
 	}
 
