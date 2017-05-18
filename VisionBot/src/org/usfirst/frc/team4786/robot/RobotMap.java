@@ -52,8 +52,8 @@ public class RobotMap {
 	public static final double RightF = 0.0;
 
 	// turn PID constants
-	public static final double TurnP = 0.1;
-	public static final double TurnI = 0.0;
+	public static final double TurnP = 0.09; //.2 * .45
+	public static final double TurnI = 0.108; //.2 * .54 / 1
 	public static final double TurnD = 0.0;
 	public static final double TurnF = 0.0;
 

@@ -48,7 +48,6 @@ public class Robot extends IterativeRobot {
 			while (!Thread.interrupted()) {
 				vision.grabFrame();
 				vision.process();
-				vision.showSpacialInfo();
 				vision.putFrame();
 			}
 
@@ -115,6 +114,7 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void teleopPeriodic() {
 		Scheduler.getInstance().run();
+		vision.showSpacialInfo();
 	}
 
 	/**
