@@ -149,7 +149,7 @@ public class Vision extends Subsystem {
 			return;
 
 		// blurs the image to remove false positives
-		Imgproc.GaussianBlur(frame, processed, new Size(17, 17), 3);
+		Imgproc.GaussianBlur(frame, processed, new Size(9, 9), 3);
 
 		// we are going to use HSV, not BGR for better filtration
 		// convert BGR to HSV
@@ -175,12 +175,12 @@ public class Vision extends Subsystem {
 		// morphologies, remove false positives and negatives
 
 		// opening, removes false positives
-		Imgproc.morphologyEx(processed, processed, Imgproc.MORPH_OPEN,
+		/*Imgproc.morphologyEx(processed, processed, Imgproc.MORPH_OPEN,
 				Imgproc.getStructuringElement(Imgproc.MORPH_CROSS, new Size(9, 9)));
 
 		// closing, removes false negatives
 		Imgproc.morphologyEx(processed, processed, Imgproc.MORPH_CLOSE,
-				Imgproc.getStructuringElement(Imgproc.MORPH_CROSS, new Size(9, 9)));
+				Imgproc.getStructuringElement(Imgproc.MORPH_CROSS, new Size(9, 9)));*/
 
 		// create an arraylist to hold the unfiltered contours
 		ArrayList<MatOfPoint> contours = new ArrayList<MatOfPoint>();
@@ -232,7 +232,7 @@ public class Vision extends Subsystem {
 				solidities.add(Vision.getSolidity(contour, boundingRect));
 			}
 		}
-
+		
 		// draw our filtered contours
 		drawContours(frame, filteredContours, -1, new Scalar(0, 0xFF, 0), FILLED);
 
@@ -417,6 +417,7 @@ public class Vision extends Subsystem {
 	 * @return whether we are within the ratio interval
 	 */
 	private static boolean getPassesContourToRectRatio(MatOfPoint c, Rect r) {
+		//return true;
 		return Imgproc.contourArea(c) / r.area() >= RobotMap.contourToRectLowerPercentage
 				&& Imgproc.contourArea(c) / r.area() <= RobotMap.contourToRectUpperPercentage;
 	}

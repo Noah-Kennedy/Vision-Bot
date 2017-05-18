@@ -48,8 +48,8 @@ public class Robot extends IterativeRobot {
 			while (!Thread.interrupted()) {
 				vision.grabFrame();
 				vision.process();
-				vision.putFrame();
 				vision.showSpacialInfo();
+				vision.putFrame();
 			}
 
 		});
