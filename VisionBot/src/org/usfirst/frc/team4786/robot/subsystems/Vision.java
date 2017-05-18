@@ -155,15 +155,6 @@ public class Vision extends Subsystem {
 		// convert BGR to HSV
 		Imgproc.cvtColor(processed, processed, Imgproc.COLOR_BGR2HSV, 0);
 
-		// create scalars to hold high and low thresholds if using BGR
-		// shouldn't be using these values because HSV is better
-		/*
-		 * Scalar lowRange = new Scalar(RobotMap.lowBlueValue,
-		 * RobotMap.lowGreenValue, RobotMap.lowRedValue); Scalar highRange = new
-		 * Scalar(RobotMap.highBlueValue, RobotMap.highGreenValue,
-		 * RobotMap.highRedValue);
-		 */
-
 		// create scalars if using HSV
 		// should be using these because HSV is best
 		Scalar lowRange = new Scalar(RobotMap.lowHue, RobotMap.lowSat, RobotMap.lowVal);
@@ -200,29 +191,22 @@ public class Vision extends Subsystem {
 			// all of the contour
 			Rect boundingRect = boundingRect(contour);
 			// check to see if we are a tallish rectangle with a largish area
-			if (boundingRect.height > boundingRect.width
-					&& Vision.getPassesAspectRatioTest(boundingRect)
-					&& Vision.getPassesContourToRectRatio(contour, boundingRect)) {
+			if (
+					Vision.getPassesAspectRatioTest(boundingRect)
+					&& Vision.getPassesContourToRectRatio(contour, boundingRect)
+					) {
 
 				// add the contours and bounding rects to our filtered lists
 				filteredContours.add(contour);
 				rects.add(boundingRect);
 
-				// my own distance finding
-				// uses angles and geometry, not fudge factors and
-				// approximations
-				// has external documentation
-				/*double rads = Math.toRadians(findVerticalAngleToPoint(boundingRect.tl()) - RobotMap.cameraAngle);
-				double distanceToTarget = (RobotMap.heightOfTargetInFeet + RobotMap.bottomHeight
-						- RobotMap.cameraHeight) / (Math.tan(rads));*/
+				//get the distances
 				distances.add(this.getDistanceFromTarget(boundingRect));
 				
 				// horizontal
-				//double angle = findHorizontalAngleToPoint(center(boundingRect));
 				horizontalAngles.add(findHorizontalAngleToPoint(center(boundingRect)));
 
 				// vertical
-				//angle = findVerticalAngleToPoint(center(boundingRect));
 				verticalAngles.add(findVerticalAngleToPoint(center(boundingRect)));
 				
 				//aspect ratios
@@ -250,8 +234,7 @@ public class Vision extends Subsystem {
 			Imgproc.drawMarker(frame, rect.tl(), new Scalar(0xFF, 0, 0));
 		}
 
-		// if the number of targets > 0, find the point in the center of them
-		// all
+		// if the number of targets > 0, find the point in the center of them all
 		if (numTargets > 0)
 			centerX = center(rects).x;
 
@@ -282,6 +265,11 @@ public class Vision extends Subsystem {
 		return (p.y - middleY) * RobotMap.degreesPerPixelHeight;
 	}
 	
+	/**
+	 * Noah's distance algorithm, using angles, not fudge factors and weirdness
+	 * @param boundingRect
+	 * @return the distance of the target
+	 */
 	private double getDistanceFromTarget(Rect boundingRect){
 		return (RobotMap.heightOfTargetInFeet + RobotMap.bottomHeight
 				- RobotMap.cameraHeight) /
@@ -289,20 +277,10 @@ public class Vision extends Subsystem {
 	}
 
 	/**
-	 * print the HSV values of the center pixel to the smart dashboard.
-	 * Currently gives incorrect values.
+	 * Prints spatial info to the smart dashboard.
+	 * This has the horizontal angles, vertical angles, distances, aspect ratios and solidities for the first two contours.
+	 * Doesn't show targets if there are not enough.
 	 */
-	public void printHSV() {
-		if (frame.empty())
-			return;
-		double[] d = frame.get((int) middleX, (int) middleY);
-		SmartDashboard.putNumber("Hue", d[0]);
-		SmartDashboard.putNumber("Hue", d[1]);
-		SmartDashboard.putNumber("Hue", d[2]);
-	}
-
-
-
 	public void showSpacialInfo() {
 		if(numTargets < 1) return;
 		SmartDashboard.putNumber("1st target horizontal angle", horizontalAngles.get(0));
@@ -311,13 +289,12 @@ public class Vision extends Subsystem {
 		SmartDashboard.putNumber("1st target aspect ratio", aspectRatios.get(0));
 		SmartDashboard.putNumber("1st target solidity", solidities.get(0));
 
-
 		if(numTargets < 2) return;
-		SmartDashboard.putNumber("2st target horizontal angle", horizontalAngles.get(1));
-		SmartDashboard.putNumber("2st target vertical angle", verticalAngles.get(1));
-		SmartDashboard.putNumber("2st target distance", distances.get(1));
-		SmartDashboard.putNumber("2st target aspect ratio", aspectRatios.get(1));
-		SmartDashboard.putNumber("sst target solidity", solidities.get(1));
+		SmartDashboard.putNumber("2nd target horizontal angle", horizontalAngles.get(1));
+		SmartDashboard.putNumber("2nd target vertical angle", verticalAngles.get(1));
+		SmartDashboard.putNumber("2nd target distance", distances.get(1));
+		SmartDashboard.putNumber("2nd target aspect ratio", aspectRatios.get(1));
+		SmartDashboard.putNumber("2nd target solidity", solidities.get(1));
 
 
 
@@ -396,16 +373,6 @@ public class Vision extends Subsystem {
 	// Conditions for contours and rects to pass to not be filtered out
 
 	/**
-	 * Tests to see whether or not we are taller than wide
-	 * 
-	 * @return whether or not we have passed our width v height test
-	 */
-	@SuppressWarnings("unused")
-	private static boolean getTallerThanWide(Rect r) {
-		return r.height > r.width;
-	}
-
-	/**
 	 * Tests whether or not we have the correct ratio of bounding rect size to
 	 * contour size Basically makes sure that we have the correct amount of
 	 * rectangularness
@@ -422,27 +389,58 @@ public class Vision extends Subsystem {
 				&& Imgproc.contourArea(c) / r.area() <= RobotMap.contourToRectUpperPercentage;
 	}
 	
+	/**
+	 * Finds the solidity of the target by dividing contour area by rectangle area
+	 * @param c
+	 * @param r
+	 * @return the solidity of the target
+	 */
 	private static double getSolidity(MatOfPoint c, Rect r) {
 		return Imgproc.contourArea(c) / r.area();
 	}
 	
+	/**
+	 * Figures out whether or not we passed the aspect ratio test
+	 * @param r
+	 * @return whether or not we passed the test
+	 */
 	private static boolean getPassesAspectRatioTest(Rect r){
 		//return true;
 		return getAspectRatio(r) >= RobotMap.lowAspectRatio && getAspectRatio(r) <= RobotMap.highAspectRatio;
 	}
 	
+	/**
+	 * Finds the aspect ratio (width / height)
+	 * @param r
+	 * @return the aspect ratio
+	 */
 	private static double getAspectRatio(Rect r){
 		return (double) ((double) r.width) / r.height;
 	}
 	
+	/**
+	 * Gets the distance for a given filtered rectangle
+	 * @param index
+	 * @return the distance at the index
+	 */
 	public double getDistance(int index){
 		return distances.get(index);
 	}
 	
+	/**
+	 * Gets the vertical angle for a given filtered rectangle
+	 * @param index
+	 * @return the vertical angle at the index
+	 */
 	public double getVerticalAngles(int index){
 		return verticalAngles.get(index);
 	}
 	
+	/**
+	 * Gets the horizontal angle for a given filtered rectangle
+	 * @param index
+	 * @return the horizontal angle at the index
+	 */
 	public double getHorizontalAngles(int index){
 		return horizontalAngles.get(index);
 	}
