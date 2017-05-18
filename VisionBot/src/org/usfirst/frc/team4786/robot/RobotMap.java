@@ -10,7 +10,7 @@ public class RobotMap {
 	public static final double cameraFOVHeightInDegrees = 24.66;
 
 	// thresholds for pixel HSV
-	public static final int lowHue = 55;
+	public static final int lowHue = 60;
 	public static final int lowSat = 230;
 	public static final int lowVal = 0;
 	public static final int highHue = 70;
@@ -31,7 +31,7 @@ public class RobotMap {
 
 	// constants for second stage filtering
 	public static final double lowAspectRatio = .35;
-	public static final double highAspectRatio = .5;
+	public static final double highAspectRatio = .65;
 	public static final double contourToRectUpperPercentage = 1;
 	public static final double contourToRectLowerPercentage = .6;
 

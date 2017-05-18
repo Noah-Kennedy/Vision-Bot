@@ -147,14 +147,13 @@ public class Vision extends Subsystem {
 		// morphologies, remove false positives and negatives
 
 		// opening, removes false positives
-		/*
-		 * Imgproc.morphologyEx(processed, processed, Imgproc.MORPH_OPEN,
-		 * Imgproc.getStructuringElement(Imgproc.MORPH_CROSS, new Size(9, 9)));
-		 * 
-		 * // closing, removes false negatives Imgproc.morphologyEx(processed,
-		 * processed, Imgproc.MORPH_CLOSE,
-		 * Imgproc.getStructuringElement(Imgproc.MORPH_CROSS, new Size(9, 9)));
-		 */
+		/*Imgproc.morphologyEx(processed, processed, Imgproc.MORPH_OPEN,
+				Imgproc.getStructuringElement(Imgproc.MORPH_CROSS, new Size(9, 9)));
+		
+		 // closing, removes false negatives
+		Imgproc.morphologyEx(processed, processed, Imgproc.MORPH_CLOSE,
+				Imgproc.getStructuringElement(Imgproc.MORPH_CROSS, new Size(17, 17)));*/
+		
 
 		// create an arraylist to hold the unfiltered contours
 		ArrayList<MatOfPoint> contours = new ArrayList<MatOfPoint>();

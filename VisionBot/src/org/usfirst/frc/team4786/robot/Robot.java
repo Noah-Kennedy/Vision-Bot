@@ -55,6 +55,7 @@ public class Robot extends IterativeRobot {
 		});
 
 		// start thread
+		visionThread.setDaemon(true);
 		visionThread.start();
 
 	}
