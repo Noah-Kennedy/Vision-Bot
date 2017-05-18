@@ -126,24 +126,7 @@ public class Vision extends Subsystem {
 	 * turn
 	 */
 	public void process() {
-
-		/*
-		 * We are going to keep the frame mat the same until the end when we add
-		 * the markers and filtered contours. We will run all of our processing
-		 * algorithms on the processed mat. The processed mat will usually serve
-		 * as both a destination and source mat. We will first apply a blur to
-		 * smooth the image out and remove false positives. Next we will convert
-		 * it from BGR to HSV. We will work in HSV because it filters better in
-		 * adverse light conditions and at longer distances. We will try and
-		 * avoid having large minimum area filters because they impose
-		 * substantial limits on our range Next we will filter out all of the
-		 * pixels not in our HSV range. Next we will find the contours in our
-		 * filtered image. Next we will apply some additional filtering
-		 * techniques to remove false positives. Finally we will collect basic
-		 * data on the image and draw the filtered contours and markers onto our
-		 * output frame.
-		 */
-
+		
 		// stop this madness if the frame is empty
 		if (frame.empty())
 			return;
@@ -151,12 +134,10 @@ public class Vision extends Subsystem {
 		// blurs the image to remove false positives
 		Imgproc.GaussianBlur(frame, processed, new Size(9, 9), 3);
 
-		// we are going to use HSV, not BGR for better filtration
 		// convert BGR to HSV
 		Imgproc.cvtColor(processed, processed, Imgproc.COLOR_BGR2HSV, 0);
 
 		// create scalars if using HSV
-		// should be using these because HSV is best
 		Scalar lowRange = new Scalar(RobotMap.lowHue, RobotMap.lowSat, RobotMap.lowVal);
 		Scalar highRange = new Scalar(RobotMap.highHue, RobotMap.highSat, RobotMap.highVal);
 
@@ -181,18 +162,17 @@ public class Vision extends Subsystem {
 		// find the contours in our image
 		findContours(processed, contours, processed, RETR_LIST, Imgproc.CHAIN_APPROX_SIMPLE);
 
-		// list of filtered contours
+		// list of filtered contours and filtered rectangles
 		ArrayList<MatOfPoint> filteredContours = new ArrayList<MatOfPoint>();
-
-		// list of filtered contours as rect objects
 		ArrayList<Rect> rects = new ArrayList<Rect>();
 
-		// put our contours into rectangle objects if they pass our conditions
+		//Filter the contours
 		for (MatOfPoint contour : contours) {
-			// bounding rect objects are rectangles whose bounderies encompass
-			// all of the contour
+			
+			// bounding rect objects are rectangles whose bounderies encompass the entirety of the contour
 			Rect boundingRect = boundingRect(contour);
-			// check to see if we are a tallish rectangle with a largish area
+			
+			//second stage filtration
 			if (VisionLib.getPassesAspectRatioTest(boundingRect)
 					&& VisionLib.getPassesContourToRectRatio(contour, boundingRect)) {
 
@@ -227,15 +207,14 @@ public class Vision extends Subsystem {
 		if (rects.size() > 0)
 			Imgproc.drawMarker(frame, VisionLib.center(rects), new Scalar(0xFF, 0, 0xFF));
 
-		// draw markers to show info on each rect
+		// draw markers to show top left, center and bottom right of each rect
 		for (Rect rect : rects) {
 			Imgproc.drawMarker(frame, VisionLib.center(rect), new Scalar(0, 0, 0xFF));
 			Imgproc.drawMarker(frame, rect.br(), new Scalar(0xFF, 0, 0));
 			Imgproc.drawMarker(frame, rect.tl(), new Scalar(0xFF, 0, 0));
 		}
 
-		// if the number of targets > 0, find the point in the center of them
-		// all
+		// if the number of targets > 0, find the point in the center of them all
 		if (numTargets > 0)
 			centerX = VisionLib.center(rects).x;
 
@@ -273,7 +252,9 @@ public class Vision extends Subsystem {
 	 * @return the distance of the target
 	 */
 	private double getDistanceFromTarget(Rect boundingRect) {
-		return (RobotMap.heightOfTargetInFeet + RobotMap.bottomHeight - RobotMap.cameraHeight)
+		return (RobotMap.heightOfTargetInFeet
+				+ RobotMap.bottomHeight
+				- RobotMap.cameraHeight)
 				/ (Math.tan(Math.toRadians(findVerticalAngleToPoint(boundingRect.tl()) - RobotMap.cameraAngle)));
 	}
 
