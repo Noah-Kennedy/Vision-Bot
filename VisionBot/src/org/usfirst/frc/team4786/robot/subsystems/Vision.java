@@ -17,6 +17,7 @@ import org.opencv.core.Scalar;
 import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
 import org.usfirst.frc.team4786.robot.RobotMap;
+import org.usfirst.frc.team4786.robot.VisionLib;
 
 import edu.wpi.cscore.CvSink;
 import edu.wpi.cscore.CvSource;
@@ -51,7 +52,6 @@ public class Vision extends Subsystem {
 	private ArrayList<Double> verticalAngles;
 	private ArrayList<Double> aspectRatios;
 	private ArrayList<Double> solidities;
-
 
 	/**
 	 * The constructor for the Vision subsystem
@@ -166,12 +166,14 @@ public class Vision extends Subsystem {
 		// morphologies, remove false positives and negatives
 
 		// opening, removes false positives
-		/*Imgproc.morphologyEx(processed, processed, Imgproc.MORPH_OPEN,
-				Imgproc.getStructuringElement(Imgproc.MORPH_CROSS, new Size(9, 9)));
-
-		// closing, removes false negatives
-		Imgproc.morphologyEx(processed, processed, Imgproc.MORPH_CLOSE,
-				Imgproc.getStructuringElement(Imgproc.MORPH_CROSS, new Size(9, 9)));*/
+		/*
+		 * Imgproc.morphologyEx(processed, processed, Imgproc.MORPH_OPEN,
+		 * Imgproc.getStructuringElement(Imgproc.MORPH_CROSS, new Size(9, 9)));
+		 * 
+		 * // closing, removes false negatives Imgproc.morphologyEx(processed,
+		 * processed, Imgproc.MORPH_CLOSE,
+		 * Imgproc.getStructuringElement(Imgproc.MORPH_CROSS, new Size(9, 9)));
+		 */
 
 		// create an arraylist to hold the unfiltered contours
 		ArrayList<MatOfPoint> contours = new ArrayList<MatOfPoint>();
@@ -191,32 +193,30 @@ public class Vision extends Subsystem {
 			// all of the contour
 			Rect boundingRect = boundingRect(contour);
 			// check to see if we are a tallish rectangle with a largish area
-			if (
-					Vision.getPassesAspectRatioTest(boundingRect)
-					&& Vision.getPassesContourToRectRatio(contour, boundingRect)
-					) {
+			if (VisionLib.getPassesAspectRatioTest(boundingRect)
+					&& VisionLib.getPassesContourToRectRatio(contour, boundingRect)) {
 
 				// add the contours and bounding rects to our filtered lists
 				filteredContours.add(contour);
 				rects.add(boundingRect);
 
-				//get the distances
+				// get the distances
 				distances.add(this.getDistanceFromTarget(boundingRect));
-				
+
 				// horizontal
-				horizontalAngles.add(findHorizontalAngleToPoint(center(boundingRect)));
+				horizontalAngles.add(findHorizontalAngleToPoint(VisionLib.center(boundingRect)));
 
 				// vertical
-				verticalAngles.add(findVerticalAngleToPoint(center(boundingRect)));
-				
-				//aspect ratios
-				aspectRatios.add(getAspectRatio(boundingRect));
-				
-				//solidities
-				solidities.add(Vision.getSolidity(contour, boundingRect));
+				verticalAngles.add(findVerticalAngleToPoint(VisionLib.center(boundingRect)));
+
+				// aspect ratios
+				aspectRatios.add(VisionLib.getAspectRatio(boundingRect));
+
+				// solidities
+				solidities.add(VisionLib.getSolidity(contour, boundingRect));
 			}
 		}
-		
+
 		// draw our filtered contours
 		drawContours(frame, filteredContours, -1, new Scalar(0, 0xFF, 0), FILLED);
 
@@ -225,18 +225,19 @@ public class Vision extends Subsystem {
 
 		// draw marker at center of all rects
 		if (rects.size() > 0)
-			Imgproc.drawMarker(frame, center(rects), new Scalar(0xFF, 0, 0xFF));
+			Imgproc.drawMarker(frame, VisionLib.center(rects), new Scalar(0xFF, 0, 0xFF));
 
 		// draw markers to show info on each rect
 		for (Rect rect : rects) {
-			Imgproc.drawMarker(frame, center(rect), new Scalar(0, 0, 0xFF));
+			Imgproc.drawMarker(frame, VisionLib.center(rect), new Scalar(0, 0, 0xFF));
 			Imgproc.drawMarker(frame, rect.br(), new Scalar(0xFF, 0, 0));
 			Imgproc.drawMarker(frame, rect.tl(), new Scalar(0xFF, 0, 0));
 		}
 
-		// if the number of targets > 0, find the point in the center of them all
+		// if the number of targets > 0, find the point in the center of them
+		// all
 		if (numTargets > 0)
-			centerX = center(rects).x;
+			centerX = VisionLib.center(rects).x;
 
 		// draw a point in the middle of the screen
 		Imgproc.drawMarker(frame, middlePoint, new Scalar(0xFF, 0xFF, 0xFF));
@@ -264,39 +265,39 @@ public class Vision extends Subsystem {
 	private double findVerticalAngleToPoint(Point p) {
 		return (p.y - middleY) * RobotMap.degreesPerPixelHeight;
 	}
-	
+
 	/**
 	 * Noah's distance algorithm, using angles, not fudge factors and weirdness
+	 * 
 	 * @param boundingRect
 	 * @return the distance of the target
 	 */
-	private double getDistanceFromTarget(Rect boundingRect){
-		return (RobotMap.heightOfTargetInFeet + RobotMap.bottomHeight
-				- RobotMap.cameraHeight) /
-				(Math.tan(Math.toRadians(findVerticalAngleToPoint(boundingRect.tl()) - RobotMap.cameraAngle)));
+	private double getDistanceFromTarget(Rect boundingRect) {
+		return (RobotMap.heightOfTargetInFeet + RobotMap.bottomHeight - RobotMap.cameraHeight)
+				/ (Math.tan(Math.toRadians(findVerticalAngleToPoint(boundingRect.tl()) - RobotMap.cameraAngle)));
 	}
 
 	/**
-	 * Prints spatial info to the smart dashboard.
-	 * This has the horizontal angles, vertical angles, distances, aspect ratios and solidities for the first two contours.
-	 * Doesn't show targets if there are not enough.
+	 * Prints spatial info to the smart dashboard. This has the horizontal
+	 * angles, vertical angles, distances, aspect ratios and solidities for the
+	 * first two contours. Doesn't show targets if there are not enough.
 	 */
 	public void showSpacialInfo() {
-		if(numTargets < 1) return;
+		if (numTargets < 1)
+			return;
 		SmartDashboard.putNumber("1st target horizontal angle", horizontalAngles.get(0));
 		SmartDashboard.putNumber("1st target vertical angle", verticalAngles.get(0));
 		SmartDashboard.putNumber("1st target distance", distances.get(0));
 		SmartDashboard.putNumber("1st target aspect ratio", aspectRatios.get(0));
 		SmartDashboard.putNumber("1st target solidity", solidities.get(0));
 
-		if(numTargets < 2) return;
+		if (numTargets < 2)
+			return;
 		SmartDashboard.putNumber("2nd target horizontal angle", horizontalAngles.get(1));
 		SmartDashboard.putNumber("2nd target vertical angle", verticalAngles.get(1));
 		SmartDashboard.putNumber("2nd target distance", distances.get(1));
 		SmartDashboard.putNumber("2nd target aspect ratio", aspectRatios.get(1));
 		SmartDashboard.putNumber("2nd target solidity", solidities.get(1));
-
-
 
 	}
 
@@ -316,20 +317,7 @@ public class Vision extends Subsystem {
 		return numTargets;
 	}
 
-	/**
-	 * Takes in two opencv Points and outputs the opencv point at the midpoint
-	 * 
-	 * @param p1
-	 * @param p2
-	 * @return the midpoint of the two points
-	 */
-	private static Point midpoint(Point p1, Point p2) {
-		double x = p1.x + p2.x;
-		x /= 2.0;
-		double y = p1.y + p2.y;
-		y /= 2.0;
-		return new Point(x, y);
-	}
+
 
 	/**
 	 * 
@@ -339,109 +327,35 @@ public class Vision extends Subsystem {
 		return centerX - middleX;
 	}
 
-	/**
-	 * Takes in an opencv rect object and finds its center
-	 * 
-	 * @param r
-	 * @return the center of the rect
-	 */
-	private static Point center(Rect r) {
-		return midpoint(r.br(), r.tl());
-	}
 
-	/**
-	 * Averages all of the top left and bottom right corners together to find
-	 * the center point
-	 * 
-	 * @param rects
-	 *            a list of rect objects
-	 * @return the point at the center of the list
-	 */
-	private static Point center(ArrayList<Rect> rects) {
-		double x = 0;
-		double y = 0;
-		for (Rect r : rects) {
-			x += center(r).x;
-			y += center(r).y;
-		}
 
-		x /= ((double) rects.size());
-		y /= ((double) rects.size());
-		return new Point(x, y);
-	}
-
-	// Conditions for contours and rects to pass to not be filtered out
-
-	/**
-	 * Tests whether or not we have the correct ratio of bounding rect size to
-	 * contour size Basically makes sure that we have the correct amount of
-	 * rectangularness
-	 * 
-	 * @param c
-	 *            is the contour
-	 * @param r
-	 *            is the bounding rectangle
-	 * @return whether we are within the ratio interval
-	 */
-	private static boolean getPassesContourToRectRatio(MatOfPoint c, Rect r) {
-		//return true;
-		return Imgproc.contourArea(c) / r.area() >= RobotMap.contourToRectLowerPercentage
-				&& Imgproc.contourArea(c) / r.area() <= RobotMap.contourToRectUpperPercentage;
-	}
-	
-	/**
-	 * Finds the solidity of the target by dividing contour area by rectangle area
-	 * @param c
-	 * @param r
-	 * @return the solidity of the target
-	 */
-	private static double getSolidity(MatOfPoint c, Rect r) {
-		return Imgproc.contourArea(c) / r.area();
-	}
-	
-	/**
-	 * Figures out whether or not we passed the aspect ratio test
-	 * @param r
-	 * @return whether or not we passed the test
-	 */
-	private static boolean getPassesAspectRatioTest(Rect r){
-		//return true;
-		return getAspectRatio(r) >= RobotMap.lowAspectRatio && getAspectRatio(r) <= RobotMap.highAspectRatio;
-	}
-	
-	/**
-	 * Finds the aspect ratio (width / height)
-	 * @param r
-	 * @return the aspect ratio
-	 */
-	private static double getAspectRatio(Rect r){
-		return (double) ((double) r.width) / r.height;
-	}
-	
 	/**
 	 * Gets the distance for a given filtered rectangle
+	 * 
 	 * @param index
 	 * @return the distance at the index
 	 */
-	public double getDistance(int index){
+	public double getDistance(int index) {
 		return distances.get(index);
 	}
-	
+
 	/**
 	 * Gets the vertical angle for a given filtered rectangle
+	 * 
 	 * @param index
 	 * @return the vertical angle at the index
 	 */
-	public double getVerticalAngles(int index){
+	public double getVerticalAngles(int index) {
 		return verticalAngles.get(index);
 	}
-	
+
 	/**
 	 * Gets the horizontal angle for a given filtered rectangle
+	 * 
 	 * @param index
 	 * @return the horizontal angle at the index
 	 */
-	public double getHorizontalAngles(int index){
+	public double getHorizontalAngles(int index) {
 		return horizontalAngles.get(index);
 	}
 
