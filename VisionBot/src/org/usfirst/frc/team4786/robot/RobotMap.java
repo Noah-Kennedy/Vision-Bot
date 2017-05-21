@@ -3,7 +3,7 @@ package org.usfirst.frc.team4786.robot;
 public class RobotMap {
 	// camera settings
 	public static final int cameraFPS = 15;
-	public static final int cameraExposure = 1;
+	public static final int cameraExposure = 2;
 	public static final int width = 320;
 	public static final int height = 240;
 	public static final double cameraFOVWidthInDegrees = 43.84;
