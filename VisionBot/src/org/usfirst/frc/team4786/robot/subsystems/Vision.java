@@ -24,6 +24,7 @@ import edu.wpi.cscore.CvSource;
 import edu.wpi.cscore.UsbCamera;
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj.networktables.NetworkTable;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
@@ -52,6 +53,7 @@ public class Vision extends Subsystem {
 	private ArrayList<Double> verticalAngles;
 	private ArrayList<Double> aspectRatios;
 	private ArrayList<Double> solidities;
+	private NetworkTable visionTable;
 
 	/**
 	 * The constructor for the Vision subsystem
@@ -66,6 +68,7 @@ public class Vision extends Subsystem {
 		// instantiate mats, one to keep as the original image to have markers
 		// and contours drawn onto it
 		// and another for processing
+		visionTable = NetworkTable.getTable("visionTable");
 		processed = new Mat();
 		frame = new Mat();
 
@@ -125,7 +128,7 @@ public class Vision extends Subsystem {
 	 * object while a different thread is running this method need to wait their
 	 * turn
 	 */
-	public void process() {
+	public synchronized void process() {
 		
 		// stop this madness if the frame is empty
 		if (frame.empty())
@@ -263,6 +266,7 @@ public class Vision extends Subsystem {
 	 * first two contours. Doesn't show targets if there are not enough.
 	 */
 	public void showSpacialInfo() {
+		//if there are no targets, exit to avoid a null pointer exception
 		if (numTargets < 1)
 			return;
 		SmartDashboard.putNumber("1st target horizontal angle", horizontalAngles.get(0));
@@ -271,6 +275,7 @@ public class Vision extends Subsystem {
 		SmartDashboard.putNumber("1st target aspect ratio", aspectRatios.get(0));
 		SmartDashboard.putNumber("1st target solidity", solidities.get(0));
 
+		//if there is one target, exit to avoid a null pointer
 		if (numTargets < 2)
 			return;
 		SmartDashboard.putNumber("2nd target horizontal angle", horizontalAngles.get(1));
@@ -278,6 +283,29 @@ public class Vision extends Subsystem {
 		SmartDashboard.putNumber("2nd target distance", distances.get(1));
 		SmartDashboard.putNumber("2nd target aspect ratio", aspectRatios.get(1));
 		SmartDashboard.putNumber("2nd target solidity", solidities.get(1));
+
+	}
+	
+	/**
+	 * Send the spatial info over network tables, not SmartDashboard
+	 * For debugging purposes
+	 */
+	public void sendOverNetworkTables(){
+		if (numTargets < 1)
+			return;
+		visionTable.putNumber("1st target horizontal angle", horizontalAngles.get(0));
+		visionTable.putNumber("1st target vertical angle", verticalAngles.get(0));
+		visionTable.putNumber("1st target distance", distances.get(0));
+		visionTable.putNumber("1st target aspect ratio", aspectRatios.get(0));
+		visionTable.putNumber("1st target solidity", solidities.get(0));
+
+		if (numTargets < 2)
+			return;
+		visionTable.putNumber("2nd target horizontal angle", horizontalAngles.get(1));
+		visionTable.putNumber("2nd target vertical angle", verticalAngles.get(1));
+		visionTable.putNumber("2nd target distance", distances.get(1));
+		visionTable.putNumber("2nd target aspect ratio", aspectRatios.get(1));
+		visionTable.putNumber("2nd target solidity", solidities.get(1));
 
 	}
 
