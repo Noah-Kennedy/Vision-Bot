@@ -54,6 +54,7 @@ public class Vision extends Subsystem {
 	private ArrayList<Double> aspectRatios;
 	private ArrayList<Double> solidities;
 	private NetworkTable visionTable;
+	//private NetworkTable dash;
 
 	/**
 	 * The constructor for the Vision subsystem
@@ -69,14 +70,11 @@ public class Vision extends Subsystem {
 		// and contours drawn onto it
 		// and another for processing
 		visionTable = NetworkTable.getTable("visionTable");
+		//dash = NetworkTable.getTable("SmartDashboard");
 		processed = new Mat();
 		frame = new Mat();
 
-		distances = new ArrayList<Double>();
-		horizontalAngles = new ArrayList<Double>();
-		verticalAngles = new ArrayList<Double>();
-		aspectRatios = new ArrayList<Double>();
-		solidities = new ArrayList<Double>();
+
 
 		// instantiate usb camera to parameterized port
 		camera = CameraServer.getInstance().startAutomaticCapture(cam);
@@ -128,7 +126,12 @@ public class Vision extends Subsystem {
 	 * object while a different thread is running this method need to wait their
 	 * turn
 	 */
-	public synchronized void process() {
+	public void process() {
+		distances = new ArrayList<Double>();
+		horizontalAngles = new ArrayList<Double>();
+		verticalAngles = new ArrayList<Double>();
+		aspectRatios = new ArrayList<Double>();
+		solidities = new ArrayList<Double>();
 		
 		// stop this madness if the frame is empty
 		if (frame.empty())
@@ -266,6 +269,9 @@ public class Vision extends Subsystem {
 	 * first two contours. Doesn't show targets if there are not enough.
 	 */
 	public void showSpacialInfo() {
+		/*for(String key : dash.getKeys()){
+			dash.delete(key);
+		}*/
 		//if there are no targets, exit to avoid a null pointer exception
 		if (numTargets < 1)
 			return;
@@ -291,6 +297,9 @@ public class Vision extends Subsystem {
 	 * For debugging purposes
 	 */
 	public void sendOverNetworkTables(){
+		/*for(String key : visionTable.getKeys()){
+			visionTable.delete(key);
+		}*/
 		if (numTargets < 1)
 			return;
 		visionTable.putNumber("1st target horizontal angle", horizontalAngles.get(0));
