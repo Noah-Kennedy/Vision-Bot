@@ -50,7 +50,6 @@ public class Robot extends IterativeRobot {
 				vision.process();
 				vision.putFrame();
 				vision.showSpacialInfo();
-				vision.sendOverNetworkTables();
 			}
 
 		});

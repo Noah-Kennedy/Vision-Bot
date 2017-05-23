@@ -54,7 +54,6 @@ public class Vision extends Subsystem {
 	private ArrayList<Double> aspectRatios;
 	private ArrayList<Double> solidities;
 	private NetworkTable visionTable;
-	//private NetworkTable dash;
 
 	/**
 	 * The constructor for the Vision subsystem
@@ -70,7 +69,6 @@ public class Vision extends Subsystem {
 		// and contours drawn onto it
 		// and another for processing
 		visionTable = NetworkTable.getTable("visionTable");
-		//dash = NetworkTable.getTable("SmartDashboard");
 		processed = new Mat();
 		frame = new Mat();
 
