@@ -54,6 +54,8 @@ public class Vision extends Subsystem {
 	private ArrayList<Double> aspectRatios;
 	private ArrayList<Double> solidities;
 	private NetworkTable visionTable;
+	private NetworkTable testTable;
+
 
 	/**
 	 * The constructor for the Vision subsystem
@@ -69,6 +71,7 @@ public class Vision extends Subsystem {
 		// and contours drawn onto it
 		// and another for processing
 		visionTable = NetworkTable.getTable("visionTable");
+		testTable = NetworkTable.getTable("testTable");
 		processed = new Mat();
 		frame = new Mat();
 
@@ -267,6 +270,7 @@ public class Vision extends Subsystem {
 	 * first two contours. Doesn't show targets if there are not enough.
 	 */
 	public void showSpacialInfo() {
+		testTable.putString("Test", "Recieved");
 		/*for(String key : dash.getKeys()){
 			dash.delete(key);
 		}*/
