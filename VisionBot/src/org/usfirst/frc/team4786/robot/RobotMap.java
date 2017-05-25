@@ -20,6 +20,7 @@ public class RobotMap {
 	// geometries constants
 	public static final double heightOfTargetInFeet = 5.0 / 12;
 	public static final double MESHBOT_ROBOT_LENGTH = 2.34375; // In feet
+	public static final double meshbotWidth = 5; //TODO find this
 	public static final double distanceOfCamFromFrontOfBot = 0;
 	public static final double degreesPerPixelWidth = RobotMap.cameraFOVWidthInDegrees / RobotMap.width;
 	public static final double degreesPerPixelHeight = RobotMap.cameraFOVHeightInDegrees / RobotMap.height;

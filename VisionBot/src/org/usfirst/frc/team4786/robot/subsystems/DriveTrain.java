@@ -30,6 +30,9 @@ public class DriveTrain extends Subsystem implements PIDOutput {
 	private AHRS navX;
 	private PIDController turnController;
 	private double turnToAngleRate;
+	private double theta0;
+	private double r0;
+	private double l0;
 
 	public DriveTrain() {
 		frontLeft.enable();
@@ -110,34 +113,20 @@ public class DriveTrain extends Subsystem implements PIDOutput {
 		// they were in another mode before
 		frontLeft.changeControlMode(TalonControlMode.Position);
 		frontRight.changeControlMode(TalonControlMode.Position);
-
-		// Set Encoder Position to 0
-		frontLeft.setEncPosition(0);
-		frontRight.setEncPosition(0);
-		try {
-			Thread.sleep(10);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-		frontLeft.setEncPosition(0);
-		frontRight.setEncPosition(0);
-
+		l0 = frontLeft.get(); //TODO convert to feet
+		r0 = frontRight.get();
+		theta0 = navX.getAngle();
 		// Run convertToRotations function
 		double rot = convertToRotations(distanceToDrive);
 
 		// Make motors drive number of rotations
 		// calculated before by convertToRotations()
-		frontLeft.set(-rot);
-		frontRight.set(rot);
-		try {
-			Thread.sleep(10);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-		// Make sure we inverse this right side,
-		// otherwise, you have a spinning robot on your hands
-		frontLeft.set(-rot);
-		frontRight.set(rot);
+		frontLeft.set(rot + frontLeft.get());
+		frontRight.set(rot + frontRight.get());
+	}
+	
+	public int driveToPositionExcute(){
+		
 	}
 
 	public boolean driveToPositionIsFinished() {
@@ -146,8 +135,7 @@ public class DriveTrain extends Subsystem implements PIDOutput {
 	}
 
 	public void driveToPositionEnd() {
-		frontLeft.setEncPosition(0);
-		frontRight.setEncPosition(0);
+		
 	}
 
 	public double getLeftEncoderPosition() {

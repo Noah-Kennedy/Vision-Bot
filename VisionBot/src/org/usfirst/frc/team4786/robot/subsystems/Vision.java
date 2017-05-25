@@ -55,6 +55,7 @@ public class Vision extends Subsystem {
 	private ArrayList<Double> solidities;
 	private NetworkTable visionTable;
 	private NetworkTable testTable;
+	private long timestamp;
 
 
 	/**
@@ -114,10 +115,13 @@ public class Vision extends Subsystem {
 	}
 
 	/**
-	 * Grabs the frame from our cvsink
+	 * Grabs the frame from our cvsink and timestamp
 	 */
 	public void grabFrame() {
 		sink.grabFrame(frame);
+		//get the timestamp
+		//useful for calculations later on
+		timestamp = sink.getSource().getLastFrameTime();
 	}
 
 	/**
@@ -270,10 +274,12 @@ public class Vision extends Subsystem {
 	 * first two contours. Doesn't show targets if there are not enough.
 	 */
 	public void showSpacialInfo() {
+		//test for driver station communication
 		testTable.putString("Test", "Recieved");
-		/*for(String key : dash.getKeys()){
-			dash.delete(key);
-		}*/
+		
+		//here is our latency
+		SmartDashboard.putNumber("Latency", System.currentTimeMillis() - timestamp);
+
 		//if there are no targets, exit to avoid a null pointer exception
 		if (numTargets < 1)
 			return;
