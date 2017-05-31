@@ -262,10 +262,10 @@ public class Vision extends Subsystem {
 	 * @return the distance of the target
 	 */
 	private double getDistanceFromTarget(Rect boundingRect) {
-		return (RobotMap.heightOfTargetInFeet
+		return Math.abs((RobotMap.heightOfTargetInFeet
 				+ RobotMap.bottomHeight
 				- RobotMap.cameraHeight)
-				/ (Math.tan(Math.toRadians(findVerticalAngleToPoint(boundingRect.tl()) - RobotMap.cameraAngle)));
+				/ (Math.tan(Math.toRadians(findVerticalAngleToPoint(boundingRect.tl()) - RobotMap.cameraAngle))));
 	}
 
 	/**

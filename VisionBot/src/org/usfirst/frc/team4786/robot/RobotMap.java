@@ -10,8 +10,8 @@ public class RobotMap {
 	public static final double cameraFOVHeightInDegrees = 24.66;
 
 	// thresholds for pixel HSV
-	public static final int lowHue = 60;
-	public static final int lowSat = 230;
+	public static final int lowHue = 55;
+	public static final int lowSat = 200;
 	public static final int lowVal = 0;
 	public static final int highHue = 70;
 	public static final int highSat = 255;
@@ -20,7 +20,7 @@ public class RobotMap {
 	// geometries constants
 	public static final double heightOfTargetInFeet = 5.0 / 12;
 	public static final double MESHBOT_ROBOT_LENGTH = 2.34375; // In feet
-	public static final double meshbotWidth = 5; //TODO find this
+	public static final double meshbotWidth = 25 / 12.0; //In feet
 	public static final double distanceOfCamFromFrontOfBot = 0;
 	public static final double degreesPerPixelWidth = RobotMap.cameraFOVWidthInDegrees / RobotMap.width;
 	public static final double degreesPerPixelHeight = RobotMap.cameraFOVHeightInDegrees / RobotMap.height;
@@ -31,7 +31,7 @@ public class RobotMap {
 	public static final double distanceBetweenCentersOfTargets = 8.25 / 12;
 
 	// constants for second stage filtering
-	public static final double lowAspectRatio = .35;
+	public static final double lowAspectRatio = .0;
 	public static final double highAspectRatio = .65;
 	public static final double contourToRectUpperPercentage = 1;
 	public static final double contourToRectLowerPercentage = .6;
