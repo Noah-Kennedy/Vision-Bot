@@ -23,6 +23,8 @@ import edu.wpi.cscore.CvSink;
 import edu.wpi.cscore.CvSource;
 import edu.wpi.cscore.UsbCamera;
 import edu.wpi.first.wpilibj.CameraServer;
+import edu.wpi.first.wpilibj.PIDSource;
+import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.networktables.NetworkTable;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -32,29 +34,52 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * vision
  *
  */
-public class Vision extends Subsystem {
+public class Vision extends Subsystem implements PIDSource{
 
 	// make all of the instance fields private
 	// it will screw up your multithreading if something other than the vision
 	// thread tries to directly access something from here
 	// don't allow for objects to be publicly accessed
+	
+	//OpenCV Mat image objects
+	//Basically the binary images OpenCV used
 	private Mat processed;
 	private Mat frame;
+	
+	//WPILib objects
+	//Just copy what I'm doing with them into your project as the WPILib is goddawful with this stuff
 	private UsbCamera camera;
 	private CvSink sink;
 	private CvSource stream;
+	
+	//center point is the center of all of our contours
+	//it will essentially be the center of our target
 	private double centerX;
+	private double centerY;
+	
+	//middle point is the middle of the screen
 	private double middleY;
-	private Point middlePoint;
-	private int numTargets;
 	private double middleX;
+	private Point middlePoint;
+	
+	//ArrayLists of our values
+	//These are all described later on
+	//They have data regarding our targets
+	private int numTargets;
 	private ArrayList<Double> distances;
 	private ArrayList<Double> horizontalAngles;
 	private ArrayList<Double> verticalAngles;
 	private ArrayList<Double> aspectRatios;
 	private ArrayList<Double> solidities;
+	
+	//network tables
+	//mostly just used for testing stuff
 	private NetworkTable visionTable;
 	private NetworkTable testTable;
+	
+	//not used here
+	//unfortunately we lack the requisite cameras for timestamping
+	//WPILib does not appear to support timestamps either, so offboard processing would be needed
 	private long timestamp;
 
 
@@ -225,8 +250,10 @@ public class Vision extends Subsystem {
 		}
 
 		// if the number of targets > 0, find the point in the center of them all
-		if (numTargets > 0)
+		if (numTargets > 0) {
 			centerX = VisionLib.center(rects).x;
+			centerY = VisionLib.center(rects).y;
+		}
 
 		// draw a point in the middle of the screen
 		Imgproc.drawMarker(frame, middlePoint, new Scalar(0xFF, 0xFF, 0xFF));
@@ -382,6 +409,27 @@ public class Vision extends Subsystem {
 	 */
 	public double getHorizontalAngles(int index) {
 		return horizontalAngles.get(index);
+	}
+
+	@Override
+	//not necessary or used
+	public void setPIDSourceType(PIDSourceType pidSource) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	//not necessary or used
+	public PIDSourceType getPIDSourceType() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	/**
+	 * Finds the offset from the point (to be used for PID
+	 */
+	public double pidGet() {
+		return findHorizontalAngleToPoint(new Point(centerX, centerY));
 	}
 
 }
